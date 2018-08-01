@@ -23,7 +23,7 @@
     "@zapjs/zaptoken": "^1.0.3",
     "ethereumjs-wallet": "^0.6.0",
     "path": "^0.12.7",
-    "truffle-hdwallet-provider": "git+https://github.com/zapproject/truffle-hdwallet-provider.git",
+    "truffle-hdwallet-provider": "0.0.6",
     "truffle-hdwallet-provider-privkey": "^0.3.0",
     "web3": "^1.0.0-beta.35"
   }

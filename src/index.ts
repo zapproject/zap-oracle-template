@@ -4,43 +4,18 @@ const HDWalletProviderMem = require("truffle-hdwallet-provider");
 const Web3 = require('web3');
 import { ZapRegistry } from "@zapjs/registry";
 
-import { initProvider, createProvider} from "./provider";
+import { initProvider, createProvider} from "./providerFactory";
+import { handleQuery} from "./provider";
 
+const INFURA_WS = "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq";
+const INFURA_HTTP = "https://kovan.infura.io/xeb916AFjrcttuQlezyq";
 
 const mnemonic:string = "rally later assist feature wait primary addict sister remove language piece drink";
 //"solid giraffe crowd become skin deliver screen receive balcony ask manual current"; //
 
 async function main() {
-	const INFURA_URL = "wss://kovan.infura.io/ws";
-	const poopoo: any = new HDWalletProviderMem(mnemonic, "wss://kovan.infura.io/_ws");
-
-	console.log("OK");
-	const web3: any = new Web3(poopoo);	
-
-	// Get the provider and contracts
-	const { provider, contracts } = await initProvider(web3);
-
-	const registry: ZapRegistry = provider.zapRegistry;
-
-	const title = await registry.getProviderTitle(provider.providerOwner);
-
-	if(title.length == 0){
-		console.log("Initializing provider");
-		createProvider(provider);
-		
-	} else {
-		console.log("Oracle already exists");
-
-		console.log('Filter', provider.listenQueries({}, console.log));
-	}
-}
-
-main();
-
-/*
-async function main() {
-	const reader: any = new Web3(new Web3.providers.WebsocketProvider(INFURA_URL));
-	const writer: any = new Web3(new HDWalletProviderMem(mnemonic, INFURA_URL));	
+	const reader: any = new Web3(new Web3.providers.WebsocketProvider(INFURA_WS));
+	const writer: any = new Web3(new HDWalletProviderMem(mnemonic, INFURA_HTTP));	
 
 	// Get the provider and contracts
 	const { providerR, providerW, contracts } = await initProvider(reader, writer);
@@ -50,12 +25,14 @@ async function main() {
 
 	if(title.length == 0){
 		console.log("Initializing provider");
-		createProvider(provider);
+		createProvider(providerW);
 	} else {
-		console.log("Oracle already exists");
-
-		providerR.listenQueries({}, console.log);
+		console.log("Oracle already exists. Listening for queries");
+		providerR.listenQueries({}, function(err: any, event: any){ 
+			if(err) throw err;
+			handleQuery(providerW, event)
+		});
 	}
-	
+}
 
-}*/
+main();

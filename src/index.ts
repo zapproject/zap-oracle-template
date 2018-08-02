@@ -2,18 +2,19 @@
 const HDWalletProvider = require("truffle-hdwallet-provider-privkey");
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
 const Web3 = require('web3');
-import { ZapRegistry } from "@zapjs/registry";
+import { ZapRegistry} from "@zapjs/registry";
 
 import { initProvider, createProvider} from "./providerFactory";
-import { handleQuery} from "./provider";
+import { handleQuery, getPrice} from "./provider";
 
 const INFURA_WS = "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq";
 const INFURA_HTTP = "https://kovan.infura.io/xeb916AFjrcttuQlezyq";
 
 const mnemonic:string = "rally later assist feature wait primary addict sister remove language piece drink";
-//"solid giraffe crowd become skin deliver screen receive balcony ask manual current"; //
 
 async function main() {
+
+var web3 = new Web3();
 	const reader: any = new Web3(new Web3.providers.WebsocketProvider(INFURA_WS));
 	const writer: any = new Web3(new HDWalletProviderMem(mnemonic, INFURA_HTTP));	
 

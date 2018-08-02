@@ -6,6 +6,7 @@ import { ZapProvider } from "@zapjs/provider";
 import { ZapToken } from "@zapjs/zaptoken";
 
 import { join } from "path";
+const request = require('request');
 
 /**
  * Promise that is resolved after a certain timeout
@@ -49,7 +50,7 @@ export async function loadContracts(web3: any): Promise<any> {
  */
 export async function loadAccount(web3: any): Promise<string> {
 	const accounts: string[] = await web3.eth.getAccounts();
-	
+
 	if ( accounts.length == 0 ) {
 		console.log('Unable to find an account in the current web3 provider');
 		process.exit(1);
@@ -57,4 +58,23 @@ export async function loadAccount(web3: any): Promise<string> {
 	}
 	console.log(accounts[0]);
 	return accounts[0];
+}
+
+
+/**
+ * Performs a GET request on an API url and eventually returns the JSON response 
+ * 
+ * @param url - HTTP/HTTPS url to query from
+ * @returns A Promise that eventually resolves into JSON data returned from the server
+ */
+export function requestPromise(url: string): Promise<any> {
+	return new Promise((resolve, reject) => {
+		request.get(url, function (err: any, response: any, data: any) { 
+			if ( err ) {
+				reject(err);
+				return;
+			}
+			resolve(data);
+		});
+	});
 }

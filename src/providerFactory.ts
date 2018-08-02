@@ -28,7 +28,6 @@ const Web3 = require('web3');
  	};
  }
 
-
 /**
  * Initializes the provider and the weather endpoint
  *

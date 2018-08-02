@@ -5,6 +5,7 @@ import "./dependencies/DispatchInterface.sol";
 import "./dependencies/BondageInterface.sol";
 import "./dependencies/ERC20.sol";
 
+/* Creates a Bet between two parties based on the weather */
 contract WeatherContract is ClientBytes32Array {
 
 	event Join(address bettor, bool upper, uint256 value);
@@ -49,7 +50,7 @@ contract WeatherContract is ClientBytes32Array {
   }
 
     function startBet(bool up) payable {
-        // cannot start an already started bet, or an expired bet
+        // cannot start an already started bet or an expired bet
         if(joined) revert();
         if(block.timestamp > fulfillment) revert();
         amount = msg.value;

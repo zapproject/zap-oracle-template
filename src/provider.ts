@@ -1,5 +1,6 @@
 import { ZapProvider } from "@zapjs/provider";
 import { ZapToken } from "@zapjs/zaptoken";
+import {requestPromise} from "./utils";
 const Web3 = require('web3');
 
 const http = require('http');
@@ -19,13 +20,14 @@ const CMC_KEY:string = "&CMC_PRO_API_KEY=1b1593df-f732-4a58-8b84-dbc3bd896741";
  	// helper Web3 instance
  	var web3 = new Web3();
 
+ 	// prep the results of the query
  	const query:string = queryEvent.returnValues.query;
  	const endpoint:string = web3.utils.hexToUtf8(queryEvent.returnValues.endpoint);
  	const subscriber:string = queryEvent.returnValues.subscriber;
  	const endpointParams:string[] = queryEvent.returnValues.endpointParams;
  	const id: string = queryEvent.returnValues.id;
 
-
+ 	// parse the endpoint params
  	for(var i:number = 0; i< endpointParams.length; i++){
  		endpointParams[i] = web3.utils.hexToUtf8(endpointParams[i]);
  	}
@@ -33,7 +35,7 @@ const CMC_KEY:string = "&CMC_PRO_API_KEY=1b1593df-f732-4a58-8b84-dbc3bd896741";
  	const onchainSub:boolean = queryEvent.returnValues.onchainSubscriber;
 
  	console.log("Received query to", endpoint, "from", subscriber);
- 	console.log("Query:", query, "(", endpointParams, ")");
+ 	console.log("Query:", query, id, endpointParams);
 
  	var ratio:number = await getPrice(query);	
  	console.log("Ratio of ZAP/" + query + ":", ratio);
@@ -41,8 +43,9 @@ const CMC_KEY:string = "&CMC_PRO_API_KEY=1b1593df-f732-4a58-8b84-dbc3bd896741";
  	ratio = web3.utils.toWei((1/ratio).toString());
  	console.log("1 ETH =", ratio, "Wei ZAP");
 
+ 	// convert the ratio number to hex and pad it to be the correct length
  	var response:string = web3.utils.padLeft(web3.utils.toHex(ratio), 64);
- 	console.log(response);
+ 	//console.log(response);
 
  	// we expect a timestamp from query
  	providerW.zapDispatch.respond({ queryId: id, responseParams: [response], from: providerW.providerOwner, dynamic: true }).then((txid: any) => { 

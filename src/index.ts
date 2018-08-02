@@ -29,6 +29,7 @@ var web3 = new Web3();
 		createProvider(providerW);
 	} else {
 		console.log("Oracle already exists. Listening for queries");
+		// TODO make endpoint specific
 		providerR.listenQueries({}, function(err: any, event: any){ 
 			if(err) throw err;
 			handleQuery(providerW, event)

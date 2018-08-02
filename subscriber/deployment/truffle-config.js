@@ -43,7 +43,6 @@ module.exports = {
             network_id: "*",
             from: "0x010e49e47cbb34e67c072702ed6f4d8b273f751f"// must be first account in accounts[] array inside tests
         },
-
         "kovan": {
             provider: new HDWalletProviderMem(mnemonic, "https://kovan.infura.io"),
             gas: "6238278",

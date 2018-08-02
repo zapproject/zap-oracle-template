@@ -36,10 +36,10 @@ const Web3 = require('web3');
  export async function createProvider(provider: ZapProvider): Promise<void> {
  	const title:string = "Template-Oracle";
  	const public_key = "abcdef";
- 	const endpoint:string = "weather";
+ 	const endpoint:string = "zapprice";
  	const endpoint_params: string[] = [];
 
- 	await provider.initiateProvider({ public_key, title, endpoint, endpoint_params });
+ 	//await provider.initiateProvider({ public_key, title, endpoint, endpoint_params });
 
  	console.log('Created provider', title);
 

@@ -22,11 +22,11 @@ async function getZapPrice(base:string): Promise<number>{
 
 async function priceResponder(web3: any, event: ZapQueryEvent): Promise<string[]> {
 	const { queryId,
-	    query,
-	    endpoint,
-	    subscriber,
-	    endpointParams,
-	    onchainSub } = event;
+			query,
+			endpoint,
+			subscriber,
+			endpointParams,
+			onchainSub } = event;
 
 	console.log(`Received query to ${endpoint} from ${onchainSub ? 'contract' : 'person'} at address ${subscriber}`);
 	console.log(`Query ${queryId.substring(0, 8)}...: "${query}". Parameters: ${endpointParams}`);

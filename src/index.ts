@@ -30,7 +30,7 @@ export async function handleQuery(provider: ZapProvider, queryEvent: any): Promi
 	}
 
 	// Call the callback
-	const response: string[] = await Responders[event.queryId].responder(web3, event);
+	const response: string[] = await Responders[event.endpoint].responder(web3, event);
 
 	// Send the response
 	provider.zapDispatch.respond({

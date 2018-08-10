@@ -56,7 +56,7 @@ export async function loadAccount(web3: any): Promise<string> {
 		process.exit(1);
 		return "";
 	}
-	console.log(accounts[0]);
+
 	return accounts[0];
 }
 
@@ -77,4 +77,36 @@ export function requestPromise(url: string): Promise<any> {
 			resolve(data);
 		});
 	});
+}
+
+export type ZapQueryEvent = {
+	queryId: string;
+	query: string;
+	endpoint: string;
+	subscriber: string;
+	endpointParams: string[];
+	onchainSub: boolean;
+};
+
+export type ZapResponderFunction = (web3: any, event: ZapQueryEvent) => Promise<string[]>;
+
+export type ZapResponder = {
+	[name: string]: ZapResponderFunction;
+}
+
+/**
+ * Parses the output of the event to a usable JSON encoded object
+ *
+ * @param returnValues The returnValues field in the object
+ * @returns The JSON encoded object
+ */
+export function parseEvent(web3: any, results: any): ZapQueryEvent {
+	return {
+		queryId: results.id,
+		query: results.query,
+		endpoint: web3.utils.hexToUtf8(results.endpoint),
+		subscriber: results.subscriber,
+		endpointParams: results.endpointParams.map(web3.utils.hexToUtf8),
+		onchainSub: results.onchainSubscriber
+	}
 }

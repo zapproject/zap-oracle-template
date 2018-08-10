@@ -5,9 +5,8 @@ const Web3 = require('web3');
 
 import { ZapRegistry } from "@zapjs/registry";
 import { ZapProvider } from "@zapjs/provider";
-import { initProvider } from "./providerFactory";
 import { Responders, ProviderData } from "./provider";
-import { parseEvent, ZapQueryEvent, ZapResponder } from "./utils";
+import { parseEvent, initProvider, ZapQueryEvent, ZapResponder } from "./utils";
 
 const INFURA_WS = "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq";
 

@@ -1,10 +1,2 @@
-
 node_modules/
-
-src/index\.js
-
-src/provider\.js
-
-src/providerFactory\.js
-
-src/utils\.js
+src/*.js

@@ -40,6 +40,16 @@ async function priceResponder(web3: any, event: ZapQueryEvent): Promise<string[]
 	return [web3.utils.padLeft(web3.utils.toHex(perZap), 64)];
 }
 
-export const responders: ZapResponder = {
-	"zapprice": priceResponder
+export const Responders: ZapResponder = {
+	"zapprice": {
+		responder: priceResponder,
+		curve: [3, 0, 0, 2, 1000]
+	}
+};
+
+export const ProviderData: any = {
+	title: "Template-Oracle",
+	public_key: "abcdef",
+	endpoint: "no-op",
+	endpoint_params: []
 };

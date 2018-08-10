@@ -20,29 +20,6 @@ export function sleep(timeout: number): Promise<void> {
 }
 
 /**
- * Loads the contracts from a specially formatted file
- *
- * @param web3 - Web3 instance to be used
- * @param file - The file containing the artifacts directory and addresses
- * @returns The loaded objects in a JSON formatted instance
- */
-export async function loadContracts(web3: any): Promise<any> {
-	const options: any = {
-		artifactsDir: join(__dirname, '../', 'node_modules/@zapjs/artifacts/contracts/'),
-		networkId: await web3.eth.net.getId(),
-		networkProvider: web3.currentProvider,
-	};
-	
-	return {
-		'zapArbiter': new ZapArbiter(options),
-		'zapBondage': new ZapBondage(options),
-		'zapDispatch': new ZapDispatch(options),
-		'zapRegistry': new ZapRegistry(options),
-		'zapToken': new ZapToken(options)
-	};
-}
-
-/**
  * Loads the first account from the current loaded provider in a web3 instance
  * 
  * @param web3 - Web3 instance to load accounts from
@@ -91,7 +68,10 @@ export type ZapQueryEvent = {
 export type ZapResponderFunction = (web3: any, event: ZapQueryEvent) => Promise<string[]>;
 
 export type ZapResponder = {
-	[name: string]: ZapResponderFunction;
+	[name: string]: {
+		responder: ZapResponderFunction,
+		curve: number[]
+	};
 }
 
 /**

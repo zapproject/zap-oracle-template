@@ -5,8 +5,8 @@ const Web3 = require('web3');
 
 import { ZapRegistry } from "@zapjs/registry";
 import { ZapProvider } from "@zapjs/provider";
-import { initProvider, createProvider } from "./providerFactory";
-import { responders } from "./provider";
+import { initProvider } from "./providerFactory";
+import { Responders, ProviderData } from "./provider";
 import { parseEvent, ZapQueryEvent, ZapResponder } from "./utils";
 
 const INFURA_WS = "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq";
@@ -25,13 +25,13 @@ export async function handleQuery(provider: ZapProvider, queryEvent: any): Promi
 	// Parse the event into usable variables
 	const event: ZapQueryEvent = parseEvent(web3, queryEvent.returnValues);
 
-	if ( !(event.endpoint in responders) ) {
+	if ( !(event.endpoint in Responders) ) {
 		console.log('Unable to find the responder for', event.endpoint);
 		return;
 	}
 
 	// Call the callback
-	const response: string[] = await responders[event.queryId](web3, event);
+	const response: string[] = await Responders[event.queryId].responder(web3, event);
 
 	// Send the response
 	provider.zapDispatch.respond({
@@ -48,14 +48,24 @@ async function main() {
 	const web3: any = new Web3(new HDWalletProviderMem(mnemonic, INFURA_WS));
 
 	// Get the provider and contracts
-	const { provider, contracts } = await initProvider(web3);
+	const provider = await initProvider(web3);
 
 	const registry: ZapRegistry = provider.zapRegistry;
 	const title = await registry.getProviderTitle(provider.providerOwner);
 
 	if ( title.length == 0 ) {
 		console.log("Initializing provider");
-		createProvider(provider);
+		
+		await provider.initiateProvider(ProviderData);
+		
+		for ( const responder in Responders ) {
+
+		 	await provider.initiateProviderCurve({
+		 		endpoint: responder,
+		 		term: Responders[responder].curve,
+		 		from: provider.providerOwner
+		 	});
+		}
 	}
 	else {
 		console.log("Oracle already exists. Listening for queries");

@@ -17,7 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^10.5.5",
-    "@zapjs/artifacts": "^1.0.5",
+    "@zapjs/artifacts": "^1.0.6",
     "@zapjs/basecontract": "^1.0.6",
     "@zapjs/bondage": "^1.0.4",
     "@zapjs/curve": "^1.0.3",

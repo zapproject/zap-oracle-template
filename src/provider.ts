@@ -1,5 +1,4 @@
 import { ZapProvider } from "@zapjs/provider";
-import { ZapToken } from "@zapjs/zaptoken";
 import { requestPromise, ZapQueryEvent, ZapResponder } from "./utils";
 
 /* Sample HTTP data provider */

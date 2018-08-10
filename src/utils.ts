@@ -1,10 +1,4 @@
-import { ZapArbiter } from "@zapjs/arbiter";
-import { ZapBondage } from "@zapjs/bondage";
-import { ZapDispatch } from "@zapjs/dispatch";
-import { ZapRegistry } from "@zapjs/registry";
 import { ZapProvider } from "@zapjs/provider";
-import { ZapToken } from "@zapjs/zaptoken";
-
 import { join } from "path";
 const request = require('request');
 

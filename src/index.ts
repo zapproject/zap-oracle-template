@@ -1,7 +1,6 @@
 //import { loadProvider, createProvider, createProviderCurve, getEndpointInfo, doBondage, doUnbondage } from "./provider";
 const Web3 = require('web3');
 
-import { ZapRegistry } from "@zapjs/registry";
 import { ZapProvider } from "@zapjs/provider";
 import { getWeb3Provider, Responders, ProviderData } from "./provider";
 import { parseEvent, initProvider, ZapQueryEvent, ZapResponder } from "./utils";

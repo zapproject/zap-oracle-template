@@ -1,15 +1,12 @@
 //import { loadProvider, createProvider, createProviderCurve, getEndpointInfo, doBondage, doUnbondage } from "./provider";
-const HDWalletProviderMem = require("truffle-hdwallet-provider");
 const Web3 = require('web3');
 
 import { ZapRegistry } from "@zapjs/registry";
 import { ZapProvider } from "@zapjs/provider";
-import { Responders, ProviderData } from "./provider";
+import { getWeb3Provider, Responders, ProviderData } from "./provider";
 import { parseEvent, initProvider, ZapQueryEvent, ZapResponder } from "./utils";
 
 const INFURA_WS = "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq";
-
-const mnemonic: string = "rally later assist feature wait primary addict sister remove language piece drink";
 
 /**
  * Handles a query
@@ -43,7 +40,7 @@ export async function handleQuery(provider: ZapProvider, queryEvent: any): Promi
 }
 
 async function main() {
-	const web3: any = new Web3(new HDWalletProviderMem(mnemonic, INFURA_WS));
+	const web3: any = new Web3(await getWeb3Provider());
 
 	// Get the provider and contracts
 	const provider = await initProvider(web3);
@@ -79,4 +76,4 @@ async function main() {
 	}
 }
 
-main();
+main().catch(err => console.error('zap-oracle-template error:', err));

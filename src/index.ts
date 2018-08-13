@@ -1,5 +1,4 @@
 //import { loadProvider, createProvider, createProviderCurve, getEndpointInfo, doBondage, doUnbondage } from "./provider";
-const HDWalletProvider = require("truffle-hdwallet-provider-privkey");
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
 const Web3 = require('web3');
 

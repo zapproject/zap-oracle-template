@@ -17,15 +17,12 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^10.5.5",
-    "@zapjs/curve": "^1.0.3",
-    "@zapjs/provider": "^1.0.3",
-    "@zapjs/registry": "^1.0.5",
-    "ethereumjs-wallet": "^0.6.2",
-    "http": "0.0.0",
+    "@zapjs/curve": "^2.0.1",
+    "@zapjs/provider": "^2.0.1",
+    "@zapjs/registry": "^2.0.1",
     "path": "^0.12.7",
     "request": "^2.88.0",
     "truffle-hdwallet-provider": "git+https://github.com/zapproject/truffle-hdwallet-provider.git",
-    "truffle-hdwallet-provider-privkey": "^0.3.0",
     "web3": "^1.0.0-beta.35"
   }
 }

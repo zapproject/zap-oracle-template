@@ -1,12 +1,9 @@
 //import { loadProvider, createProvider, createProviderCurve, getEndpointInfo, doBondage, doUnbondage } from "./provider";
 const Web3 = require('web3');
 
-import { ZapRegistry } from "@zapjs/registry";
 import { ZapProvider } from "@zapjs/provider";
 import { getWeb3Provider, Responders, ProviderData } from "./provider";
 import { parseEvent, initProvider, ZapQueryEvent, ZapResponder } from "./utils";
-
-const INFURA_WS = "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq";
 
 /**
  * Handles a query
@@ -45,8 +42,7 @@ async function main() {
 	// Get the provider and contracts
 	const provider = await initProvider(web3);
 
-	const registry: ZapRegistry = provider.zapRegistry;
-	const title = await registry.getProviderTitle(provider.providerOwner);
+	const title = await provider.getTitle();
 
 	if ( title.length == 0 ) {
 		console.log("Initializing provider");
@@ -54,7 +50,6 @@ async function main() {
 		await provider.initiateProvider(ProviderData);
 		
 		for ( const responder in Responders ) {
-
 		 	await provider.initiateProviderCurve({
 		 		endpoint: responder,
 		 		term: Responders[responder].curve,
@@ -65,7 +60,6 @@ async function main() {
 	else {
 		console.log("Oracle already exists. Listening for queries");
 		
-		// TODO make endpoint specific
 		provider.listenQueries({}, (err: any, event: any) => { 
 			if ( err ) {
 				throw err;

@@ -1,7 +1,5 @@
-import { ZapProvider } from "@zapjs/provider";
 import { requestPromise, ZapQueryEvent, ZapResponder } from "./utils";
 
-const HDWalletProvider = require("truffle-hdwallet-provider-privkey");
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
 
 /* Sample HTTP data provider */
@@ -13,7 +11,6 @@ const CMC_KEY: string = "&CMC_PRO_API_KEY=1b1593df-f732-4a58-8b84-dbc3bd896741";
 const mnemonic: string = "rally later assist feature wait primary addict sister remove language piece drink";
 
 /* Uses the CoinMarketCap API to get the current exchange ratio of ZAP to another base currency */
-/* Returns a decimal temperature (Fahrenheit) to the thousandths digit */
 async function getZapPrice(base:string): Promise<number>{
 	try {
 		const body: any = await requestPromise(CMC_URL + base + CMC_KEY);
@@ -60,5 +57,6 @@ export const ProviderData: any = {
 };
 
 export async function getWeb3Provider() {	
-	return new HDWalletProviderMem(mnemonic, "wss://kovan.infura.io/_ws")
+	const INFURA_WS = "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq";
+	return new HDWalletProviderMem(mnemonic, INFURA_WS);
 }

@@ -29,10 +29,9 @@ export async function handleQuery(provider: ZapProvider, queryEvent: any): Promi
 	const response: string[] = await Responders[event.endpoint].responder(web3, event);
 
 	// Send the response
-	provider.zapDispatch.respond({
+	provider.respond({
 		queryId: event.queryId,
 		responseParams: response,
-		from: provider.providerOwner,
 		dynamic: true
 	}).then((txid: any) => { 
 		console.log('Responsed to', event.subscriber, "in transaction", txid.transactionHash);
@@ -45,8 +44,7 @@ async function main() {
 	// Get the provider and contracts
 	const provider = await initProvider(web3);
 
-	const registry: ZapRegistry = provider.zapRegistry;
-	const title = await registry.getProviderTitle(provider.providerOwner);
+	const title = await provider.getTitle();
 
 	if ( title.length == 0 ) {
 		console.log("Initializing provider");

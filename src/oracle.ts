@@ -1,6 +1,6 @@
 import { requestPromise, ZapQueryEvent, ZapResponder, initialize} from "./helper";
 
-/* Starts the oracle */
+/* Starts the oracle. Creates it (if it does not exist), and starts listening for queries */
 initialize().catch(err => console.error('zap-oracle-template error:', err));
 
 //==============================================================================================================
@@ -20,8 +20,8 @@ export const Responders: ZapResponder = {
 		curve: [3, 0, 0, 2, 1000]
 	}
 
-	// define more endpoints and their callbacks
-};
+	// define more endpoints and their callbacks here
+}; 
 
 //==============================================================================================================
 // Web3 instance creator

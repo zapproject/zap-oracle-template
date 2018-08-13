@@ -31,7 +31,6 @@ export type ZapResponder = {
 	};
 }
 
-
 //==============================================================================================================
 // Setup Functions
 //==============================================================================================================
@@ -93,7 +92,7 @@ export type ZapResponder = {
  		networkId: (await web3.eth.net.getId()).toString(),
  		networkProvider: web3.currentProvider,
  	});
-
+ }
 
 //==============================================================================================================
 // Query Handler
@@ -141,7 +140,6 @@ export type ZapResponder = {
 	});
 }
 
-
 //==============================================================================================================
 // Additional Helper Functions
 //==============================================================================================================
@@ -150,19 +148,26 @@ export type ZapResponder = {
  * Performs a GET request on an API url and eventually returns the JSON response 
  * 
  * @param url - HTTP/HTTPS url to query from
+ * @param method - the HTTP(s) request type to send (defaults to GET)
+ * @param headers - the HTTP(s) headers to send (defaults to none)
+ * @param data - the JSON body of this request
  * @returns A Promise that eventually resolves into JSON data returned from the server
  */
- export function requestPromise(url: string): Promise<any> {
+ export function requestPromise(url: string, method: string = "GET", headers = {}, data = {}): Promise<any> {
  	return new Promise((resolve, reject) => {
- 		request.get(url, function (err: any, response: any, data: any) { 
- 			if ( err ) {
+ 		request({
+ 			method: method,
+ 			url: url,
+ 			headers: headers,
+ 			body: data,
+ 			json: true
+ 		}, (err:any, response:any, data:any) => {
+ 			if (err) {
  				reject(err);
  				return;
  			}
  			resolve(data);
- 		});
+ 		}
  	});
  }
-
-
 

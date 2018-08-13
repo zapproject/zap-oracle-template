@@ -2,8 +2,9 @@
   "name": "zap-oracle-template",
   "version": "0.0.1",
   "description": "A template for creating off-chain Zap oracles.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
+    "build": "./node_modules/.bin/tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -16,20 +17,10 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^10.5.5",
-    "@zapjs/artifacts": "^1.0.4",
-    "@zapjs/basecontract": "^1.0.5",
-    "@zapjs/bondage": "^1.0.3",
-    "@zapjs/curve": "^1.0.2",
-    "@zapjs/provider": "^1.0.2",
-    "@zapjs/registry": "^1.0.3",
-    "@zapjs/utils": "^1.0.3",
-    "@zapjs/zaptoken": "^1.0.3",
-    "ethereumjs-wallet": "^0.6.0",
-    "http": "0.0.0",
+    "@zapjs/provider": "^2.0.1",
     "path": "^0.12.7",
-    "request": "^2.87.0",
-    "truffle-hdwallet-provider": "0.0.6",
-    "truffle-hdwallet-provider-privkey": "^0.3.0",
+    "request": "^2.88.0",
+    "truffle-hdwallet-provider": "git+https://github.com/zapproject/truffle-hdwallet-provider.git",
     "web3": "^1.0.0-beta.35"
   }
 }

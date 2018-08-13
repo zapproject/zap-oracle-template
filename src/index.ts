@@ -26,10 +26,9 @@ export async function handleQuery(provider: ZapProvider, queryEvent: any): Promi
 	const response: string[] = await Responders[event.endpoint].responder(web3, event);
 
 	// Send the response
-	provider.zapDispatch.respond({
+	provider.respond({
 		queryId: event.queryId,
 		responseParams: response,
-		from: provider.providerOwner,
 		dynamic: true
 	}).then((txid: any) => { 
 		console.log('Responsed to', event.subscriber, "in transaction", txid.transactionHash);

@@ -1,8 +1,6 @@
 require('babel-register');
 require('babel-polyfill');
 
-
-const HDWalletProvider = require("truffle-hdwallet-provider-privkey");
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
 
 const mnemonic = "solid giraffe crowd become skin deliver screen receive balcony ask manual current";

@@ -16,11 +16,15 @@
   "author": "Michael Man",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^10.5.5",
-    "@zapjs/provider": "^2.0.1",
+    "@types/node": "^10.7.0",
+    "@zapjs/provider": "^2.0.4",
     "path": "^0.12.7",
     "request": "^2.88.0",
     "truffle-hdwallet-provider": "git+https://github.com/zapproject/truffle-hdwallet-provider.git",
-    "web3": "^1.0.0-beta.35"
+    "web3": "^1.0.0-beta.35",
+    "websocket": "^1.0.26"
+  },
+  "devDependencies": {
+    "babel-polyfill": "^6.26.0"
   }
 }

@@ -50,27 +50,28 @@ export type ZapResponder = {
 	if ( title.length == 0 ) {
 		console.log("Initializing provider");
 		
-		await provider.initiateProvider(ProviderData);
-		
-		for ( const responder in Responders ) {
-			await provider.initiateProviderCurve({
-				endpoint: responder,
-				term: Responders[responder].curve,
+		const res:string = await provider.initiateProvider(ProviderData);
+		console.log(res);
+		console.log("Successfully created oracle",ProviderData.title);
+		for ( const spec in Responders ) {
+			const r:string = await provider.initiateProviderCurve({
+				endpoint: spec,
+				term: Responders[spec].curve,
 				from: provider.providerOwner
 			});
+			console.log(r);
+			console.log("Successfully initialized endpoint", spec);
 		}
 	}
-	else {
-		console.log("Oracle already exists. Listening for queries");
-		
-		provider.listenQueries({}, (err: any, event: any) => { 
-			if ( err ) {
-				throw err;
-			}
+	console.log("Oracle exists. Listening for queries");
 
-			handleQuery(provider, event);
-		});
-	}
+	provider.listenQueries({}, (err: any, event: any) => { 
+		if ( err ) {
+			throw err;
+		}
+
+		handleQuery(provider, event);
+	});
 }
 
 /**
@@ -167,7 +168,7 @@ export type ZapResponder = {
  				return;
  			}
  			resolve(data);
- 		}
+ 		});
  	});
  }
 

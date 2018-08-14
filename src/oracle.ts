@@ -1,8 +1,5 @@
 import { requestPromise, ZapQueryEvent, ZapResponder, initialize} from "./helper";
 
-/* Starts the oracle. Creates it (if it does not exist), and starts listening for queries */
-initialize().catch(err => console.error('zap-oracle-template error:', err));
-
 //==============================================================================================================
 // Provider Constants
 //==============================================================================================================
@@ -79,3 +76,8 @@ async function getZapPrice(base:string): Promise<number>{
 		return -1;
 	}
 }
+
+
+
+/* Starts the oracle. Creates it (if it does not exist), and starts listening for queries */
+initialize().catch(err => console.error('zap-oracle-template error:', err));

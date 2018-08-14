@@ -1,11 +1,24 @@
 pragma solidity ^0.4.24;
 
-import "./dependencies/Client.sol";
-import "./dependencies/DispatchInterface.sol";
+//==============================================================================================================
+// Dependencies
+//==============================================================================================================
 
 contract Token {
     function transfer(address to, uint256 amount) public returns (bool);
     function balanceOf(address addr) public view returns (uint256);
+}
+
+interface DispatchInterface {
+    function query(address, string, bytes32, bytes32[], bool, bool) external returns (uint256);
+    function cancelQuery(uint256) external;
+}
+
+contract ClientIntArray{
+    /// @dev callback that provider will call after Dispatch.query() call
+    /// @param id request id
+    /// @param response int array
+    function callback(uint256 id, int[] response) external;
 }
 
 library SafeMath {
@@ -31,7 +44,11 @@ library SafeMath {
     }
 }          
 
-contract Faucet is ClientBytes32Array {
+//==============================================================================================================
+// Faucet Contract
+//==============================================================================================================
+
+contract Faucet is ClientIntArray {
     using SafeMath for uint256;
 
     Token token;
@@ -77,10 +94,10 @@ contract Faucet is ClientBytes32Array {
         owner.transfer(address(this).balance);
     }   
 
-    constructor(address _token, address _owner, address _dispatch, address _oracle) public {
+    constructor(address _token, address _dispatch, address _oracle) public {
         tokenAddress = _token;
         token = Token(_token);
-        owner = _owner;
+        owner = msg.sender;
         dispatch = DispatchInterface(_dispatch);
         oracleAddr = _oracle;
     }
@@ -104,7 +121,7 @@ contract Faucet is ClientBytes32Array {
 
     // TO DO: SECURE IT!
     /* Called upon the provider fulfilling the query, enabling the faucet to fulfill the buy request */
-    function callback(uint256 id, bytes32[] response) external {
+    function callback(uint256 id, int256[] response) external {
         uint256 rate = uint256(response[0]);
         uint256 amount = orderBook[id].eth_amount;
         address client = orderBook[id].client;

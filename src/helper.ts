@@ -22,7 +22,7 @@ export type ZapQueryEvent = {
 	onchainSub: boolean;
 };
 
-export type ZapResponderFunction = (web3: any, event: ZapQueryEvent) => Promise<string[]>;
+export type ZapResponderFunction = (web3: any, event: ZapQueryEvent) => Promise<string[] | number[]>;
 
 export type ZapResponder = {
 	[name: string]: {
@@ -56,8 +56,7 @@ export type ZapResponder = {
 		for ( const spec in Responders ) {
 			const r:string = await provider.initiateProviderCurve({
 				endpoint: spec,
-				term: Responders[spec].curve,
-				from: provider.providerOwner
+				term: Responders[spec].curve
 			});
 			console.log(r);
 			console.log("Successfully initialized endpoint", spec);
@@ -70,7 +69,7 @@ export type ZapResponder = {
 			throw err;
 		}
 
-		handleQuery(provider, event);
+		handleQuery(provider, event, web3);
 	});
 }
 
@@ -105,9 +104,7 @@ export type ZapResponder = {
  * @param queryEvent - Web3 incoming query event
  * @returns ZapProvider instantiated
  */
- export async function handleQuery(provider: ZapProvider, queryEvent: any): Promise<void> {
- 	const web3 = provider.zapBondage.web3;
-
+ export async function handleQuery(provider: ZapProvider, queryEvent: any, web3:any): Promise<void> {
  	const results:any = queryEvent.returnValues;
 
 	// Parse the event into a usable JS object
@@ -126,10 +123,10 @@ export type ZapResponder = {
 	}
 
 	console.log(`Received query to ${event.endpoint} from ${event.onchainSub ? 'contract' : 'offchain subscriber'} at address ${event.subscriber}`);
-	console.log(`Query ${event.queryId.substring(0, 8)}...: "${event.query}". Parameters: ${event.endpointParams}`);
+	console.log(`Query ID ${event.queryId.substring(0, 8)}...: "${event.query}". Parameters: ${event.endpointParams}`);
 
 	// Call the responder callback
-	const response: string[] = await Responders[event.endpoint].responder(web3, event);
+	const response: Array<string|number> = await Responders[event.endpoint].responder(web3, event);
 
 	// Send the response
 	provider.respond({
@@ -154,15 +151,21 @@ export type ZapResponder = {
  * @param data - the JSON body of this request
  * @returns A Promise that eventually resolves into JSON data returned from the server
  */
- export function requestPromise(url: string, method: string = "GET", headers = {}, data = {}): Promise<any> {
+ export function requestPromise(url: string, method: string = "GET", headers = -1, data = -1): Promise<any> {
+ 	var trans:any = {
+ 		method: method,
+ 		url: url,
+ 	};
+
+ 	if(headers != -1) trans.headers = headers;
+ 	if(data != -1){ 
+ 		trans.data = data;
+ 		trans.json = true;
+ 	}
+
+
  	return new Promise((resolve, reject) => {
- 		request({
- 			method: method,
- 			url: url,
- 			headers: headers,
- 			body: data,
- 			json: true
- 		}, (err:any, response:any, data:any) => {
+ 		request(trans, (err:any, response:any, data:any) => {
  			if (err) {
  				reject(err);
  				return;

@@ -14,7 +14,7 @@ export const ProviderData: any = {
 export const Responders: ZapResponder = {
 	"zapprice": {
 		responder: priceResponder,
-		curve: [3, 0, 0, 2, 1000]
+		curve: [3, 0, 0, 2 * 1e18, 1000]
 	}
 
 	// define more endpoints and their callbacks here
@@ -37,7 +37,7 @@ export async function getWeb3Provider() {
 // Responder callback functions
 //==============================================================================================================
 
-async function priceResponder(web3: any, event: ZapQueryEvent): Promise<string[]> {
+async function priceResponder(web3: any, event: ZapQueryEvent): Promise<number[]> {
 	// do stuff with these values
 	const { queryId,
 			query,
@@ -47,8 +47,7 @@ async function priceResponder(web3: any, event: ZapQueryEvent): Promise<string[]
 			onchainSub } = event;
 
 	const zapPerBase: number = await getZapPrice(query);	
-
-	return [web3.utils.padLeft(web3.utils.toHex(zapPerBase), 64)];
+	return [zapPerBase];
 }
 
 //==============================================================================================================
@@ -73,11 +72,10 @@ async function getZapPrice(base:string): Promise<number>{
 		return perBase;
 	}
 	catch (err) {
+		console.log(err);
 		return -1;
 	}
 }
-
-
 
 /* Starts the oracle. Creates it (if it does not exist), and starts listening for queries */
 initialize().catch(err => console.error('zap-oracle-template error:', err));

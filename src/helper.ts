@@ -134,7 +134,7 @@ export type ZapResponder = {
 		responseParams: response,
 		dynamic: true
 	}).then((txid: any) => { 
-		console.log('Responsed to', event.subscriber, "in transaction", txid.transactionHash);
+		console.log('Responded to', event.subscriber, "in transaction", txid.transactionHash);
 	});
 }
 

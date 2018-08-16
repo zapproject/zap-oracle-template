@@ -150,4 +150,3 @@ contract Faucet is ClientIntArray {
         token.transfer(client, weiZap);
     }
 }
-

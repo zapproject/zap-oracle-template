@@ -124,6 +124,7 @@ contract Faucet is ClientIntArray, Ownable {
 
         token = Token(coord.getContract("ZAP_TOKEN"));
         dispatch = DispatchInterface(coord.getContract("DISPATCH"));
+        oracleAddr = _oracle;
     }
 
     function getOrder(uint256 id) public view returns (address, uint256){

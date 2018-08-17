@@ -15,7 +15,7 @@ const mnemonic:string = "solid giraffe crowd become skin deliver screen receive 
 
 const BONDAGE_ADDR:string = "0xc7a1f161af0c67526f957436aff65e3e7b9e65f3";
 
-const FAUCET_ADDR:string = "0xf6f8db262add4341c10513dca41be9b64ae80e23";
+const FAUCET_ADDR:string = "0xc52e9f6819cd0af04619aa07bb73634ff0ce7b13";
 const ORACLE_ADDR:string = "0x3fda6E7e9E5AEca8c6B3CD8c32079fB97a4cb221";
 
 async function main() {
@@ -36,10 +36,12 @@ async function main() {
 
 	console.log("Running faucet setup from: " + owner, "to", FAUCET_ADDR);
 
-	// mint tokens to faucet, account (INTEGER ZAP)
-	await token.allocate({to: FAUCET_ADDR, amount: toBN(1e18).imul(toBN(1000)), from: owner}).then((txid: any) => { 
+	// fund the faucet
+	await token.allocate({to: FAUCET_ADDR, amount: toBN(1e18).imul(toBN(10000000)), from: owner}).then((txid: any) => { 
  		console.log('Allocation to Faucet, Hash:', txid.transactionHash); 
  	});
+
+ 	// fund the owner/bonder
 	await token.allocate({to: owner, amount: toBN(1e18).imul(toBN(1000)), from: owner}).then((txid: any) => { 
  		console.log('Allocation to Owner, Hash:', txid.transactionHash); 
  	});

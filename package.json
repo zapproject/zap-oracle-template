@@ -17,10 +17,10 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^10.7.1",
-    "@zapjs/artifacts": "^2.0.11",
+    "@zapjs/artifacts": "^2.0.12",
     "@zapjs/bondage": "^2.0.10",
-    "@zapjs/dispatch": "^2.0.10",
-    "@zapjs/provider": "^2.0.11",
+    "@zapjs/dispatch": "^2.0.12",
+    "@zapjs/provider": "^2.0.12",
     "@zapjs/zaptoken": "^2.0.9",
     "path": "^0.12.7",
     "request": "^2.88.0",

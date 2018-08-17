@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-contract Client1 {
+interface Client1 {
     /// callback that dispatch will call after a provider response
     function callback(uint256 id, string response1) external;
 }
@@ -14,7 +14,8 @@ interface DispatchInterface {
     function cancelQuery(uint256) external;
 }
 
-contract ExampleSubscriber {
+/* Contract implements a basic Client1 and query/callback functionality */
+contract SimpleSubscriber {
 
 	event SentQuery(uint256 queryId, string query, bytes32 endpoint, bytes32[] params);
 	event ReceivedResult(uint256 queryId, string result);
@@ -27,11 +28,7 @@ contract ExampleSubscriber {
 
 	/* Permissions */
 	address public owner;
-    modifier ownerOnly {
-        require(msg.sender == owner); 
-        _;
-    }
-
+    
     /* Constructor defines the addresses of the dispatch and oracle */
 	constructor(address _dispatch, address _oracle) public{
 		dispatch = DispatchInterface(_dispatch);
@@ -39,16 +36,25 @@ contract ExampleSubscriber {
 		owner = msg.sender;
 	}
 
-	/* Simple query function consumes one DOT */
-	function sendQuery(string query, bytes32 endpoint, bytes32[] params) external ownerOnly {
-		// query call takes in an oracle address, query string, endpoint specifier, endpoint parameters,
-		// and booleans for whether the provider and subscriber are on-chain or off-chain
-		uint256 queryId = dispatch.query(oracle, query, endpoint, params, false, true);
-		
+	/* Simple example query function to dispatch. Puts one DOT into escrow. 
+	 * DOT is given to the oracle after the query is fulfilled */
+	function sendQuery() external {
+		require(msg.sender == owner);
+
+		// query call takes in an oracle address, query string, endpoint specifier, endpoint parameters (none for this query)
+		uint256 queryId = dispatch.query(oracle, "ETH", "zapprice", []);
+		/*
+		 * query: "ETH" => base of exchange rate
+		 * endpoint: "zapprice" => endpoint specifier 
+		 * endpoint parameters: [] => no endpoint parameters here (can be added for customized data)
+		 */
+
+		// do something with queryId
 		emit SentQuery(queryId, query, endpoint, params);
 	}
 
 	/* Callback is called by Dispatch upon a response from the oracle */
+	/* Data from oracle will be sent through this function */
 	function callback(uint256 id, string response1) external {
 		require(msg.sender == address(dispatch));
 

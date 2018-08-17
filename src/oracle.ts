@@ -6,15 +6,13 @@ import { requestPromise, ZapQueryEvent, ZapResponder, initialize} from "./helper
 
 export const ProviderData: any = {
 	title: "Template-Oracle",
-	public_key: "abcdef",
-	endpoint: "N/A",
-	endpoint_params: []
+	public_key: "abcdef"
 };
 
 export const Responders: ZapResponder = {
 	"zapprice": {
 		responder: priceResponder,
-		curve: [3, 0, 0, 2 * 1e18, 1000]
+		curve: [3, 0, 0, 2 * 1e18, 1000] // 2x^2 [1,1000]
 	}
 
 	// define more endpoints and their callbacks here

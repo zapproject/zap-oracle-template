@@ -9,7 +9,7 @@ interface Client1 {
 interface DispatchInterface {
     // Routes a query through Dispatch to an oracle, passing in a query and endpoint specifiers
     // This will consume 1 DOT
-    function query(address, string, bytes32, bytes32[], bool, bool) external returns (uint256);
+    function query(address, string, bytes32, bytes32[]) external returns (uint256);
     // Cancels a query that has yet to be fulfilled, returning the DOT from escrow
     function cancelQuery(uint256) external;
 }
@@ -40,9 +40,9 @@ contract SimpleSubscriber {
 	 * DOT is given to the oracle after the query is fulfilled */
 	function sendQuery() external {
 		require(msg.sender == owner);
-
+		bytes32[] memory arr = new bytes32[](0);
 		// query call takes in an oracle address, query string, endpoint specifier, endpoint parameters (none for this query)
-		uint256 queryId = dispatch.query(oracle, "ETH", "zapprice", []);
+		uint256 queryId = dispatch.query(oracle, "ETH", "zapprice", arr);
 		/*
 		 * query: "ETH" => base of exchange rate
 		 * endpoint: "zapprice" => endpoint specifier 
@@ -50,7 +50,7 @@ contract SimpleSubscriber {
 		 */
 
 		// do something with queryId
-		emit SentQuery(queryId, query, endpoint, params);
+		emit SentQuery(queryId, "ETH", "zapprice", arr);
 	}
 
 	/* Callback is called by Dispatch upon a response from the oracle */

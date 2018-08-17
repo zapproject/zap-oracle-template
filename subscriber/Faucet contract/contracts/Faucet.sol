@@ -9,8 +9,35 @@ contract Token {
     function balanceOf(address addr) public view returns (uint256);
 }
 
+contract Ownable {
+    address public owner;
+    event OwnershipTransferred(address indexed previousOwner,address indexed newOwner);
+
+    /// @dev The Ownable constructor sets the original `owner` of the contract to the sender account.
+    constructor() public { owner = msg.sender; }
+
+    /// @dev Throws if called by any contract other than latest designated caller
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    /// @dev Allows the current owner to transfer control of the contract to a newOwner.
+    /// @param newOwner The address to transfer ownership to.
+    function transferOwnership(address newOwner) public onlyOwner {
+       require(newOwner != address(0));
+       emit OwnershipTransferred(owner, newOwner);
+       owner = newOwner;
+    }
+}
+
+
+contract ZapCoordinatorInterface is Ownable{
+    function getContract(string contractName) public view returns (address);
+}
+
 interface DispatchInterface {
-    function query(address, string, bytes32, bytes32[], bool, bool) external returns (uint256);
+    function query(address, string, bytes32, bytes32[]) external returns (uint256);
     function cancelQuery(uint256) external;
 }
 
@@ -48,13 +75,15 @@ library SafeMath {
 // Faucet Contract
 //==============================================================================================================
 
-contract Faucet is ClientIntArray {
+contract Faucet is ClientIntArray, Ownable {
     using SafeMath for uint256;
 
     Token token;
-    address public owner;
     address public tokenAddress;
     uint public decimals = 10 ** 18;
+
+    address coordAddr;
+    ZapCoordinatorInterface coord;
 
     DispatchInterface dispatch;
  
@@ -74,34 +103,29 @@ contract Faucet is ClientIntArray {
     // mapping of addresses and Ether amounts (wei) to be fulfilled
     mapping(uint256 => Order) private orderBook;
 
-    modifier ownerOnly {
-        require(msg.sender == owner); 
-        _;
+    function refreshDependencies(address newOracle) public onlyOwner {
+        oracleAddr = newOracle;
+        dispatch = DispatchInterface(coord.getContract("DISPATCH"));
     }
 
-    function setOwner(address _owner) public ownerOnly {
-        require(_owner != address(0));
-        owner = _owner;
-    }
-    
-    function withdrawTok() public ownerOnly {
+    function withdrawTok() public onlyOwner {
         if (owner != msg.sender) revert();
         token.transfer(owner, token.balanceOf(this));        
     }
     
-    function withdrawEther() public ownerOnly {
+    function withdrawEther() public onlyOwner {
         if (owner != msg.sender) revert();
         owner.transfer(address(this).balance);
     }   
 
-    constructor(address _token, address _dispatch, address _oracle) public {
-        tokenAddress = _token;
-        token = Token(_token);
-        owner = msg.sender;
-        dispatch = DispatchInterface(_dispatch);
-        oracleAddr = _oracle;
+    constructor(address _coord, address _oracle) public {
+        coordAddr = _coord;
+        coord = ZapCoordinatorInterface(coordAddr);
+
+        token = Token(coord.getContract("ZAP_TOKEN"));
+        dispatch = DispatchInterface(coord.getContract("DISPATCH"));
     }
-    
+
     function getOrder(uint256 id) public view returns (address, uint256){
         return (orderBook[id].client, orderBook[id].eth_amount);
     }
@@ -111,7 +135,7 @@ contract Faucet is ClientIntArray {
         if(msg.value > 0) {
             // query the price oracle
             bytes32[] memory params = new bytes32[](0);
-            uint256 id = dispatch.query(oracleAddr, "ETH", "zapprice", params, false, true);
+            uint256 id = dispatch.query(oracleAddr, "ETH", "zapprice", params);
             // put the order in the orderbook
             orderBook[id].client = msg.sender;
             orderBook[id].eth_amount = msg.value;
@@ -122,6 +146,7 @@ contract Faucet is ClientIntArray {
     // TO DO: SECURE IT!
     /* Called upon the provider fulfilling the query, enabling the faucet to fulfill the buy request */
     function callback(uint256 id, int256[] response) external {
+        require(msg.sender == address(dispatch));
         uint256 rate = uint256(response[0]);
         uint256 amount = orderBook[id].eth_amount;
         address client = orderBook[id].client;

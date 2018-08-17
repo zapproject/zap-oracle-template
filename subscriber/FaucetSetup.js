@@ -12,11 +12,12 @@ const HDWalletProviderMem = require("truffle-hdwallet-provider");
 const Web3 = require('web3');
 const bondage_1 = require("@zapjs/bondage");
 const zaptoken_1 = require("@zapjs/zaptoken");
+const { toBN, utf8ToHex } = require("web3-utils");
 const path_1 = require("path");
 const INFURA_HTTP = "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq";
 const mnemonic = "solid giraffe crowd become skin deliver screen receive balcony ask manual current";
 const BONDAGE_ADDR = "0xc7a1f161af0c67526f957436aff65e3e7b9e65f3";
-const FAUCET_ADDR = "0x25eaf1ff3107bf9c98c0c6de0185bca637ed9265";
+const FAUCET_ADDR = "0xf6f8db262add4341c10513dca41be9b64ae80e23";
 const ORACLE_ADDR = "0x3fda6E7e9E5AEca8c6B3CD8c32079fB97a4cb221";
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -33,18 +34,18 @@ function main() {
         const token = new zaptoken_1.ZapToken(options);
         console.log("Running faucet setup from: " + owner, "to", FAUCET_ADDR);
         // mint tokens to faucet, account (INTEGER ZAP)
-        yield token.allocate({ to: FAUCET_ADDR, amount: 10000, from: owner }).then((txid) => {
+        yield token.allocate({ to: FAUCET_ADDR, amount: toBN(1e18).imul(toBN(1000)), from: owner }).then((txid) => {
             console.log('Allocation to Faucet, Hash:', txid.transactionHash);
         });
-        yield token.allocate({ to: owner, amount: 10000, from: owner }).then((txid) => {
+        yield token.allocate({ to: owner, amount: toBN(1e18).imul(toBN(1000)), from: owner }).then((txid) => {
             console.log('Allocation to Owner, Hash:', txid.transactionHash);
         });
         // approve bondage contract for the delegate bond
-        yield token.approve({ to: BONDAGE_ADDR, amount: 10000, from: owner }).then((txid) => {
+        yield token.approve({ to: BONDAGE_ADDR, amount: toBN(1e18).imul(toBN(1000)), from: owner }).then((txid) => {
             console.log('Approval to Faucet, Hash:', txid.transactionHash);
         });
         // delegated bond to the contract
-        yield bondage.delegateBond({ provider: ORACLE_ADDR, endpoint: "zapprice", dots: 10, subscriber: FAUCET_ADDR, from: owner }).then((txid) => {
+        yield bondage.delegateBond({ provider: ORACLE_ADDR, endpoint: "zapprice", dots: 100, subscriber: FAUCET_ADDR, from: owner }).then((txid) => {
             console.log('Delegated bond, Hash:', txid.transactionHash);
         });
         process.exit(0);

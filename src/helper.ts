@@ -2,12 +2,13 @@
 // Dependencies
 //==============================================================================================================
 
+import {Config} from "./config";
 const Web3 = require('web3');
 const request = require('request');
-
 import { ZapProvider } from "@zapjs/provider";
-import { getWeb3Provider, Responders, ProviderData } from "./oracle";
 import { join } from "path";
+const HDWalletProviderMem = require("truffle-hdwallet-provider");
+
 
 //==============================================================================================================
 // Types
@@ -31,6 +32,12 @@ export type ZapResponder = {
 	};
 }
 
+
+export async function getWeb3Provider() {
+    return new HDWalletProviderMem(Config.mnemonic, Config.NODE_WS);
+}
+
+
 //==============================================================================================================
 // Setup Functions
 //==============================================================================================================
@@ -50,17 +57,17 @@ export type ZapResponder = {
 	if ( title.length == 0 ) {
 		console.log("Initializing provider");
 		
-		const res:string = await provider.initiateProvider(ProviderData);
+		const res:string = await provider.initiateProvider({title:Config.title, public_key:Config.public_key});
 		console.log(res);
-		console.log("Successfully created oracle",ProviderData.title);
-		for ( const spec in Responders ) {
-			const r:string = await provider.initiateProviderCurve({
-				endpoint: spec,
-				term: Responders[spec].curve
-			});
-			console.log(r);
-			console.log("Successfully initialized endpoint", spec);
-		}
+		console.log("Successfully created oracle",Config.title);
+		// for ( const spec in Responders ) {
+		// 	const r:string = await provider.initiateProviderCurve({
+		// 		endpoint: spec,
+		// 		term: Responders[spec].curve
+		// 	});
+		// 	console.log(r);
+		// 	console.log("Successfully initialized endpoint", spec);
+		// }
 	}
 	console.log("Oracle exists. Listening for queries");
 
@@ -88,7 +95,6 @@ export type ZapResponder = {
  	console.log("Wallet contains:", await web3.eth.getBalance(owner) / 1e18, "ETH");
 
  	return new ZapProvider(owner, {
- 		artifactsDir: join(__dirname, '../', 'node_modules/@zapjs/artifacts/contracts/'),
  		networkId: (await web3.eth.net.getId()).toString(),
  		networkProvider: web3.currentProvider,
  	});

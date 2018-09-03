@@ -1,34 +1,13 @@
 import { requestPromise, ZapQueryEvent, ZapResponder, initialize} from "./helper";
-
-//==============================================================================================================
-// Provider Constants
-//==============================================================================================================
-
-export const ProviderData: any = {
-	title: "Template-Oracle",
-	public_key: "abcdef"
-};
-
-export const Responders: ZapResponder = {
-	"zapprice": {
-		responder: priceResponder,
-		curve: [3, 0, 0, 2 * 1e18, 1000] // 2x^2 [1,1000]
-	}
-
-	// define more endpoints and their callbacks here
-}; 
-
+import {Config} from "./config";
 //==============================================================================================================
 // Web3 instance creator
 //==============================================================================================================
 
-const INFURA_WS = "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq";
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
-/* Put your mnemonic here */
-const mnemonic: string = "rally later assist feature wait primary addict sister remove language piece drink";
 
 export async function getWeb3Provider() {		
-	return new HDWalletProviderMem(mnemonic, INFURA_WS);
+	return new HDWalletProviderMem(Config.mnemonic, Config.NODE_WS);
 }
 
 //==============================================================================================================

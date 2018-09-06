@@ -1,12 +1,4 @@
 
-export interface EndpointSchema{
-    name: string,
-    curve : number[],
-    params: string[],
-    query : string,
-    response:string[],
-    getResponse: Function
-}
 
 export interface QueryEvent{
     queryId: string,
@@ -15,4 +7,17 @@ export interface QueryEvent{
     subscriber: string,
     endpointParams: string[],
     onchainSub: boolean
+}
+export interface EndpointSchema{
+    name:string,
+    curve:number[],
+    queryList:QuerySchema[]
+}
+
+
+export interface QuerySchema{
+    params:string[],
+    query:string,
+    response:string[],
+    getResponse:Function
 }

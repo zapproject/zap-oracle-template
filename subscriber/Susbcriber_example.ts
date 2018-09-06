@@ -1,6 +1,6 @@
-import {Oracle} from "../src/Oracle";
+import {Oracle} from "../Oracle/Oracle";
 import {ZapSubscriber} from "@zapjs/subscriber"
-import {Config} from "../src/Config";
+import {Config} from "../Oracle/Config";
 const Web3 = require('web3');
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
 

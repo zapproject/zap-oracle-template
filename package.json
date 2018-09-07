@@ -2,10 +2,11 @@
   "name": "zap-oracle-template",
   "version": "0.0.1",
   "description": "A template for creating off-chain Zap oracles.",
-  "main": "src/index.js",
+  "main": "Oracle/index.js",
   "scripts": {
     "build": "./node_modules/.bin/tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "run-s build node lib/Oracle"
   },
   "keywords": [
     "Zap",
@@ -13,7 +14,7 @@
     "Oracle",
     "blockchain"
   ],
-  "author": "Michael Man",
+  "author": "Michael Man, propulsor",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^10.7.1",

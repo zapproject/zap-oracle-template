@@ -2,7 +2,7 @@ require('babel-register');
 require('babel-polyfill');
 
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
-
+//Kovan mnemonic
 const mnemonic = "solid giraffe crowd become skin deliver screen receive balcony ask manual current";
 
 module.exports = {

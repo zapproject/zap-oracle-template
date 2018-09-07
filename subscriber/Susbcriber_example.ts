@@ -5,9 +5,7 @@ const Web3 = require('web3');
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
 
 export async function queryProvider(providerAddress:string){
-    // setup provider and start listenting to query
     const oracle = new Oracle()
-    oracle.initialize().catch(console.error);
 
     //setup subscriber, for demo reason, we use same wallet as provider's
     let web3 = new Web3(new HDWalletProviderMem(Config.mnemonic, Config.NODE_WS,1))
@@ -15,7 +13,6 @@ export async function queryProvider(providerAddress:string){
     let subcriberOwner = accounts[0]
     let zapSubscriber = new ZapSubscriber(subcriberOwner, {networkProvider: web3, networkId: await web3.eth.net.getId()})
 
-    const provider = await oracle.getProvider()
     await oracle.delegateBond(subcriberOwner,100)
 
     //start listening to incoming reponses

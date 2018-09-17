@@ -6,7 +6,7 @@
   "scripts": {
     "build": "./node_modules/.bin/tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start" : "run-s build node lib/Oracle"
+    "start": "run-s build node lib/Oracle"
   },
   "keywords": [
     "Zap",
@@ -26,7 +26,7 @@
     "path": "^0.12.7",
     "request": "^2.88.0",
     "truffle-hdwallet-provider": "git+https://github.com/zapproject/truffle-hdwallet-provider.git",
-    "web3": "^1.0.0-beta.35",
+    "web3": "^1.0.0-beta.36",
     "websocket": "^1.0.26"
   },
   "devDependencies": {

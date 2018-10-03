@@ -3,20 +3,14 @@ import {EndpointSchema} from "./types";
 
 export const Endpoints:EndpointSchema[] =[
     {
-        name: "",
-        curve :[],
+        name: "CoinBase",
+        curve :[1,1,100000000000000],
         queryList: [{
-            query:"",
-            params:[],
-            response: [],
+            query:"price",
+            params:["{coin}","{time}"],
+            response: ["{price}","{notaryHash}"],
             getResponse: getResponse
-        },
-            {
-                query:"",
-                params:[],
-                response: [],
-                getResponse: getResponse
-            }]
+        }]
     }
     //response format  options  are reponse methods :respondBytes32Array, respondIntArray, respond1, respond2, respond3, respond4
 ]

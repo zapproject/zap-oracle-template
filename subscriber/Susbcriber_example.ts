@@ -3,6 +3,7 @@ import {ZapSubscriber} from "@zapjs/subscriber"
 import {Config} from "../Oracle/Config";
 const Web3 = require('web3');
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
+const delay = (ms:number) => new Promise(_ => setTimeout(_, ms));
 
 export async function queryProvider(providerAddress:string){
     const oracle = new Oracle()
@@ -12,8 +13,7 @@ export async function queryProvider(providerAddress:string){
     let accounts = await web3.eth.getAccounts();
     let subcriberOwner = accounts[0]
     let zapSubscriber = new ZapSubscriber(subcriberOwner, {networkProvider: web3, networkId: await web3.eth.net.getId()})
-
-    await oracle.delegateBond(subcriberOwner,100)
+    await oracle.delegateBond(subcriberOwner,10)
 
     //start listening to incoming reponses
     zapSubscriber.listenToOffchainResponse({},(err:any,logs:any)=>{
@@ -23,7 +23,6 @@ export async function queryProvider(providerAddress:string){
     //Get Oracle query list and query
     let endpoints = oracle.getEndpoints();
     endpoints.map((endpoint:any)=>{
-        console.log(zapSubscriber.zapBondage.contract.options.address)
         endpoint.queryList.map((query:any)=>{
             zapSubscriber.queryData({
                 provider: providerAddress,

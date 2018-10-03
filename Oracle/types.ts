@@ -10,7 +10,7 @@ export interface QueryEvent{
 }
 export interface EndpointSchema{
     name:string,
-    curve:number[],
+    curve:number[] ,
     queryList:QuerySchema[]
 }
 

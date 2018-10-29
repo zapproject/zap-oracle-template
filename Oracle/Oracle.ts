@@ -55,9 +55,10 @@ export  class Oracle {
 
     async delegateBond(subscriber:string,dots:number){
         let provider = await this.getProvider()
-        let zapToken = new ZapToken({networkId: this.web3.eth.net.getId(), networkProvider: this.web3})
+        let zapToken = new ZapToken({networkId: await this.web3.eth.net.getId(), networkProvider: this.web3})
         for(let endpoint of Endpoints) {
-            await zapToken.approve({to:provider.zapBondage.contract.address,from:provider.providerOwner,amount:toBN(1e10)})
+            const approved = await zapToken.approve({to:provider.zapBondage.contract._address,from:provider.providerOwner,amount:'10000000000000000000'})
+            console.log("approve : ", approved);
             await provider.zapBondage.delegateBond({provider: provider.providerOwner, endpoint: endpoint.name,subscriber,dots,from:provider.providerOwner})
         }
     }
@@ -189,6 +190,3 @@ export  class Oracle {
         }
     }
 }
-
-
-

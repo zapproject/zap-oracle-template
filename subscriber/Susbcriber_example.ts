@@ -5,6 +5,7 @@ const Web3 = require('web3');
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
 
 export async function queryProvider(providerAddress:string){
+  console.log("demo query provider")
     const oracle = new Oracle()
 
     //setup subscriber, for demo reason, we use same wallet as provider's
@@ -12,7 +13,7 @@ export async function queryProvider(providerAddress:string){
     let accounts = await web3.eth.getAccounts();
     let subcriberOwner = accounts[0]
     let zapSubscriber = new ZapSubscriber(subcriberOwner, {networkProvider: web3, networkId: await web3.eth.net.getId()})
-
+    console.log("subscriber owner : ",subcriberOwner)
     let bonded = await oracle.delegateBond(subcriberOwner,100)
     console.log("bonded : ", bonded)
 
@@ -24,7 +25,6 @@ export async function queryProvider(providerAddress:string){
     //Get Oracle query list and query
     let endpoints = oracle.getEndpoints();
     endpoints.map((endpoint:any)=>{
-        console.log(zapSubscriber.zapBondage.contract.options.address)
         endpoint.queryList.map((query:any)=>{
             zapSubscriber.queryData({
                 provider: providerAddress,

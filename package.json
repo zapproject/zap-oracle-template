@@ -7,7 +7,9 @@
     "build": "./node_modules/.bin/tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "run": "node lib/Oracle",
-    "start": "run-s build run"
+    "start": "run-s build run",
+    "demo" : "node lib/demo.js",
+    "startDemo" : "run-s build demo"
   },
   "keywords": [
     "Zap",

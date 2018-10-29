@@ -13,7 +13,8 @@ export async function queryProvider(providerAddress:string){
     let subcriberOwner = accounts[0]
     let zapSubscriber = new ZapSubscriber(subcriberOwner, {networkProvider: web3, networkId: await web3.eth.net.getId()})
 
-    await oracle.delegateBond(subcriberOwner,100)
+    let bonded = await oracle.delegateBond(subcriberOwner,100)
+    console.log("bonded : ", bonded)
 
     //start listening to incoming reponses
     zapSubscriber.listenToOffchainResponse({},(err:any,logs:any)=>{

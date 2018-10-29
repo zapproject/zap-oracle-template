@@ -6,6 +6,7 @@
 			"es2018",
 			"dom"
 		],
+		"outDir": "./lib"
 		"sourceMap": false,
 		"declaration": false,
 		"experimentalDecorators": true,

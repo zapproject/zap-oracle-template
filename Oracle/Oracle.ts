@@ -55,9 +55,9 @@ export  class Oracle {
 
     async delegateBond(subscriber:string,dots:number){
         let provider = await this.getProvider()
-        let zapToken = new ZapToken({networkId: this.web3.eth.net.getId(), networkProvider: this.web3})
+        let zapToken = new ZapToken({networkId: await this.web3.eth.net.getId(), networkProvider: this.web3})
         for(let endpoint of Endpoints) {
-            await zapToken.approve({to:provider.zapBondage.contract.address,from:provider.providerOwner,amount:toBN(1e10)})
+            await zapToken.approve({to:provider.zapBondage.contract.options.address,from:provider.providerOwner,amount:""+toBN(1e10)})
             await provider.zapBondage.delegateBond({provider: provider.providerOwner, endpoint: endpoint.name,subscriber,dots,from:provider.providerOwner})
         }
     }
@@ -93,7 +93,7 @@ export  class Oracle {
                 //create endpoint
                 console.log("create endpoint")
                 const createEndpoint = await
-                    provider.initiateProviderCurve({endpoint: endpoint.name, term: endpoint.curve});
+                    provider.initiateProviderCurve({endpoint: endpoint.name, term: endpoint.curve, broker: "0x0000000000000000000000000000000000000000"});
                 console.log("Successfully created endpoint ", createEndpoint)
             }
             else {

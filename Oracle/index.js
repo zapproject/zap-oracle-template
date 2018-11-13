@@ -1,5 +1,0 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const Oracle_1 = require("./Oracle");
-const oracle = new Oracle_1.Oracle();
-oracle.initialize().catch(console.error);

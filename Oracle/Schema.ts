@@ -9,16 +9,20 @@ export const Endpoints:EndpointSchema[] =[
             query:"",
             params:[],
             response: [],
+            dynamic:true,
             getResponse: getResponse
         },
             {
                 query:"",
                 params:[],
                 response: [],
+                dynamic:true,
                 getResponse: getResponse
             }]
     }
-    //response format  options  are reponse methods :respondBytes32Array, respondIntArray, respond1, respond2, respond3, respond4
+    //response format  options  are reponse methods :
+    // dynamic:true  --- respondBytes32Array, respondIntArray, 
+    // dynamic:false  --- respond1, respond2, respond3, respond4
 ]
 
 

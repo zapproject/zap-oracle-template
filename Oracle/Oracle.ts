@@ -179,7 +179,7 @@ export  class Oracle {
             provider.respond({
                 queryId: event.queryId,
                 responseParams: response,
-                dynamic: false
+                dynamic: query.dynamic
             }).then((txid: any) => {
                 console.log('Responded to', event.subscriber, "in transaction", txid.transactionHash);
             }).catch((e) => {

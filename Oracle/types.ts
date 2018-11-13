@@ -19,5 +19,6 @@ export interface QuerySchema{
     params:string[],
     query:string,
     response:string[],
+    dynamic:boolean,
     getResponse:Function
 }

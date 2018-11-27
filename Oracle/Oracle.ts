@@ -55,9 +55,7 @@ export  class Oracle {
 
     async delegateBond(subscriber:string,dots:number){
         let provider = await this.getProvider()
-        await this.delay(5000)
-        console.log(provider.providerOwner)
-        let zapToken = new ZapToken({networkId: this.web3.eth.net.getId(), networkProvider: this.web3})
+        let zapToken = new ZapToken({networkId: await this.web3.eth.net.getId(), networkProvider: this.web3})
         for(let endpoint of Endpoints) {
             let approve = await zapToken.approve({to:provider.zapBondage.contract._address,from:provider.providerOwner,amount:'100000000000'})
             await provider.zapBondage.delegateBond({provider: provider.providerOwner, endpoint: endpoint.name,subscriber,dots,from:provider.providerOwner})
@@ -96,7 +94,7 @@ export  class Oracle {
                 //create endpoint
                 console.log("create endpoint")
                 const createEndpoint = await
-                    provider.initiateProviderCurve({endpoint: endpoint.name, term: endpoint.curve});
+                    provider.initiateProviderCurve({endpoint: endpoint.name, term: endpoint.curve, broker: "0x0000000000000000000000000000000000000000"});
                 console.log("Successfully created endpoint ", createEndpoint)
             }
             else {
@@ -174,26 +172,21 @@ export  class Oracle {
 
         console.log(`Received query to ${event.endpoint} from ${event.onchainSub ? 'contract' : 'offchain subscriber'} at address ${event.subscriber}`);
         console.log(`Query ID ${event.queryId.substring(0, 8)}...: "${event.query}". Parameters: ${event.endpointParams}`);
-        console.log(endpoint.queryList)
         for (let query of endpoint.queryList) {
-            console.log(query)
             // Call the responder callback
             response = await
                 query.getResponse(event)
-            console.log("response : ", response)
             // Send the response
             let res = await provider.respond({
                 queryId: event.queryId,
                 responseParams: response,
-                dynamic: false
+                dynamic: query.dynamic
+            }).then((txid: any) => {
+                console.log('Responded to', event.subscriber, "in transaction", txid.transactionHash);
+            }).catch((e) => {
+                console.error(e)
+                throw new Error(`Error responding to query ${event.queryId} : ${e}`)
             })
-            console.log(res)
-            //     .then((txid: any) => {
-            //     console.log('Responded to', event.subscriber, "in transaction", txid.transactionHash);
-            // }).catch((e) => {
-            //     console.error(e)
-            //     throw new Error(`Error responding to query ${event.queryId} : ${e}`)
-            // })
         }
     }
 }

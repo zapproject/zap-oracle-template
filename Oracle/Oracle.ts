@@ -190,6 +190,3 @@ export  class Oracle {
         }
     }
 }
-
-
-

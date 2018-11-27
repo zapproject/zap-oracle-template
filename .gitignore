@@ -1,5 +1,6 @@
 node_modules/
 package-lock.json
+Oracle/*.js
 src/*.js
 yarn.lock
 yarn-error.log

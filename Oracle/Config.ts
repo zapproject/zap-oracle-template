@@ -8,7 +8,6 @@ export const  Config = {
    title: "Template-Oracle",
     public_key: "abcdef",
      NODE_WS : "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq",
-    mnemonic :  "rally later assist feature wait primary addict sister remove language piece drink"
+    mnemonic :  "pact inside track layer hello carry used silver pyramid bronze drama time"
 
-    // define more endpoints and their callbacks here
 };

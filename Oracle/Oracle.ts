@@ -35,7 +35,7 @@ export  class Oracle {
             assert(endpoint.name, "Endpoint's name is required")
             assert(endpoint.curve, `Curve is required for endpoint ${endpoint.name}`)
             assert(endpoint.curve.length >= 3, `Curve's length is invalid for endpoint ${endpoint.name}`)
-            assert(endpoint.queryList && endpoint.queryList.length > 1, `query list is required for data offer`)
+            assert(endpoint.queryList && endpoint.queryList.length >= 1, `query list is required for data offer`)
         }
     }
 
@@ -57,7 +57,7 @@ export  class Oracle {
         let provider = await this.getProvider()
         let zapToken = new ZapToken({networkId: await this.web3.eth.net.getId(), networkProvider: this.web3})
         for(let endpoint of Endpoints) {
-            await zapToken.approve({to:provider.zapBondage.contract.options.address,from:provider.providerOwner,amount:""+toBN(1e10)})
+            let approve = await zapToken.approve({to:provider.zapBondage.contract._address,from:provider.providerOwner,amount:'100000000000'})
             await provider.zapBondage.delegateBond({provider: provider.providerOwner, endpoint: endpoint.name,subscriber,dots,from:provider.providerOwner})
         }
     }
@@ -73,6 +73,7 @@ export  class Oracle {
         const web3: any = new Web3(await this.getWeb3Provider());
         // Get the provider and contracts
         const provider = await this.getProvider();
+        await this.delay(5000)
         const title = await
             provider.getTitle();
         if (title.length == 0) {
@@ -109,7 +110,6 @@ export  class Oracle {
             //         await provider.setEndpointParams({endpoint: endpoint.name, params: endpoint.params}) //todo zapjs needs to implement this
             //     }
             // }
-
             provider.listenQueries({}, (err: any, event: any) => {
                 if (err) {
                     throw err;
@@ -126,7 +126,7 @@ export  class Oracle {
      * @returns ZapProvider instantiated
      */
 
-
+    delay = (ms:number) => new Promise(_ => setTimeout(_, ms));
     async getProvider(): Promise<ZapProvider> {
         // loads the first account for this web3 provider
         const accounts: string[] = await this.web3.eth.getAccounts();
@@ -137,7 +137,8 @@ export  class Oracle {
         console.log("Wallet contains:", await this.web3.eth.getBalance(owner) / 1e18, "ETH");
         return new ZapProvider(owner, {
             networkId: (await this.web3.eth.net.getId()).toString(),
-            networkProvider:this.web3.currentProvider});
+            networkProvider:this.web3.currentProvider
+        });
     }
 
 //==============================================================================================================
@@ -176,7 +177,7 @@ export  class Oracle {
             response = await
                 query.getResponse(event)
             // Send the response
-            provider.respond({
+            let res = await provider.respond({
                 queryId: event.queryId,
                 responseParams: response,
                 dynamic: query.dynamic

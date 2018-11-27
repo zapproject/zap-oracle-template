@@ -21,7 +21,7 @@ export const Endpoints:EndpointSchema[] =[
             }]
     }
     //response format  options  are reponse methods :
-    // dynamic:true  --- respondBytes32Array, respondIntArray, 
+    // dynamic:true  --- respondBytes32Array, respondIntArray,
     // dynamic:false  --- respond1, respond2, respond3, respond4
 ]
 

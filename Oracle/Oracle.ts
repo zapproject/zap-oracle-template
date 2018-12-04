@@ -11,7 +11,9 @@ import {Endpoints} from "./Schema";
 const {toBN} =require("web3-utils");
 const assert = require("assert")
 import {EndpointSchema, QueryEvent} from "./types";
-
+const IPFS = require("ipfs-mini")
+const ipfs = new IPFS({host:'ipfs.infura.io',port:5001,protocol:'https'})
+const IPFS_GATEWAY = "https://gateway.ipfs.io/ipfs/"
 
 export  class Oracle {
     web3:any
@@ -93,9 +95,48 @@ export  class Oracle {
             if (!curveSet) {
                 //create endpoint
                 console.log("create endpoint")
+                if(endpoint.broker == "")
+                    endpoint.broker = "0x0000000000000000000000000000000000000000"
                 const createEndpoint = await
-                    provider.initiateProviderCurve({endpoint: endpoint.name, term: endpoint.curve, broker: "0x0000000000000000000000000000000000000000"});
+                    provider.initiateProviderCurve({endpoint: endpoint.name, term: endpoint.curve, broker: endpoint.broker});
                 console.log("Successfully created endpoint ", createEndpoint)
+                //setting endpoint params with indexed query string
+                let endpointParams:string[] = []
+                for(let query of endpoint.queryList){
+                    endpointParams.push(""+endpoint.queryList.indexOf(query))
+                    endpointParams.push(query.query)
+                    endpointParams.push(...query.params)
+                }
+                await provider.setEndpointParams({endpoint: endpoint.name, endpoint_params: endpointParams})
+                // setting {endpoint.json} file and save it to ipfs
+                let ipfs_endpoint:any = {}
+                ipfs_endpoint.name =  endpoint.name
+                ipfs_endpoint.curve = endpoint.curve
+                ipfs_endpoint.broker = endpoint.broker
+                ipfs_endpoint.params = endpointParams
+                // add to ipfs file
+                ipfs.addJSON(ipfs_endpoint,(err:any,res:any)=>{
+                    if(err){
+                        console.error("Fail to save endpoint data to ipfs : ", ipfs_endpoint)
+                        process.exit(err)
+                    }
+                    //save ipfs hash to provider param
+                    provider.setProviderParameter({key:`${endpoint.name}.json`,value:IPFS_GATEWAY+res})
+                        .then((txid)=>{console.log("saved endpoint info to param with hash : ",res,txid)})
+                })
+                //if there is a md string => save to provider params
+                if(endpoint.md!=""){
+                    ipfs.add(endpoint.md,(err:any,res:any)=>{
+                      if(err){
+                          console.error("Fail to save endpoint .md file to ipfs", endpoint)
+                          process.exit(err)
+                      }
+                      //set ipfs hash as provider param
+                      provider.setProviderParameter({key:`${endpoint.name}.md`,value:IPFS_GATEWAY+res})
+                        .then((txid)=>{console.log("saved endpoint info to param with hash : ",res,txid)})
+
+                    })
+                }
             }
             else {
                 console.log("curve is set : ", await

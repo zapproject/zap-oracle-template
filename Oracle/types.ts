@@ -11,7 +11,9 @@ export interface QueryEvent{
 export interface EndpointSchema{
     name:string,
     curve:number[] ,
-    queryList:QuerySchema[]
+    queryList:QuerySchema[],
+    broker:string,
+    md:string
 }
 
 

@@ -3,22 +3,25 @@ import {EndpointSchema} from "./types";
 
 export const Endpoints:EndpointSchema[] =[
     {
-        name: "",
-        curve :[],
+        name: "ipfsEndpoint2",
+        curve :[1,1,10000000000],
+        broker: "",
+        md: "", //adding md file here
         queryList: [{
-            query:"",
-            params:[],
+            query: "btcPrice",
+            params: ["time"],
             response: [],
-            dynamic:true,
+            dynamic: true,
             getResponse: getResponse
-        },
-            {
-                query:"",
-                params:[],
-                response: [],
-                dynamic:true,
-                getResponse: getResponse
-            }]
+        }]
+        // },
+        //     {
+        //         query:"",
+        //         params:[],
+        //         response: [],
+        //         dynamic:true,
+        //         getResponse: getResponse
+        //     }]
     }
     //response format  options  are reponse methods :
     // dynamic:true  --- respondBytes32Array, respondIntArray,

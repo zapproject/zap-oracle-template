@@ -25,6 +25,7 @@
     "@zapjs/subscriber": "^2.0.14",
     "@zapjs/zaptoken": "^2.0.15",
     "express": "^4.16.4",
+    "ipfs-mini": "^1.1.2",
     "path": "^0.12.7",
     "request": "^2.88.0",
     "truffle-hdwallet-provider": "git+https://github.com/zapproject/truffle-hdwallet-provider.git",

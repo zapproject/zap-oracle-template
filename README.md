@@ -45,15 +45,13 @@ Template for creating and managing your own zap oracle with ease
 - Workflow example from setting up oracle to running subscriber
 - Run : `yarn startDemo`
 
-#### MaxZap Coin Price Feed
+## MaxZap Coin Price Feed
 - These Oracle Endpoints Take in two parameters, and the "price" querytype
 	+ The parameters are the conversion "From" and "To".
 	+ For example, Using the Parameters "BTC" followed by "USD" will show the price of BTC in USD
 
 - The DaveBTC endpoint only uses the BTC to USD conversion and uses the "average" querytype
 	+ What this does is get the average of the other endpoints and excludes any outliers within 3 percent of the average
-
-
 
 - CoinCap
 	+ From: http://coincap.io/coins/

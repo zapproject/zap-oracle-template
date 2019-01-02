@@ -1,18 +1,18 @@
-import {getResponse} from "./Responder";
+import {poloniexResponder} from "./Responder";
 import {EndpointSchema} from "./types";
 
 export const Endpoints:EndpointSchema[] =[
     {
-        name: "ipfsEndpoint2",
+        name: "PoloniexAPI",
         curve :[1,1,10000000000],
         broker: "",
         md: "", //adding md file here
         queryList: [{
-            query: "btcPrice",
-            params: ["time"],
-            response: [],
+            query: "price",
+            params: ["from","to"],
+            response: ["price"],
             dynamic: true,
-            getResponse: getResponse
+            getResponse: poloniexResponder
         }]
         // },
         //     {

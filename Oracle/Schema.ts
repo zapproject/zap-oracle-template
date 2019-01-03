@@ -11,7 +11,7 @@ export const Endpoints:EndpointSchema[] =[
             query: "price",
             params: ["from","to"],
             response: ["price"],
-            dynamic: true,
+            dynamic: false,
             getResponse: poloniexResponder
         }]
         // },

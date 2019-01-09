@@ -1,9 +1,9 @@
-import {poloniexResponder} from "./Responder";
+import {coincapResponder} from "./Responder";
 import {EndpointSchema} from "./types";
 
 export const Endpoints:EndpointSchema[] =[
     {
-        name: "PoloniexAPI",
+        name: "CoinCapAPI",
         curve :[2,7e18,1e16,10000000000],
         broker: "",
         md: "", //adding md file here
@@ -12,7 +12,7 @@ export const Endpoints:EndpointSchema[] =[
             params: ["from","to"],
             response: ["price"],
             dynamic: false,
-            getResponse: poloniexResponder
+            getResponse: coincapResponder
         }]
         // },
         //     {

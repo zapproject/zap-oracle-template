@@ -6,7 +6,8 @@
   "scripts": {
     "build": "./node_modules/.bin/tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "run-s build node lib/Oracle"
+    "oracle": "node lib/Oracle",
+    "start": "run-s build oracle"
   },
   "keywords": [
     "Zap",
@@ -25,10 +26,11 @@
     "@zapjs/subscriber": "^2.0.14",
     "@zapjs/zaptoken": "^2.0.15",
     "express": "^4.16.4",
+    "ipfs-mini": "^1.1.5",
     "path": "^0.12.7",
     "request": "^2.88.0",
-    "truffle-hdwallet-provider": "git+https://github.com/zapproject/truffle-hdwallet-provider.git",
-    "web3": "^1.0.0-beta.36",
+    "truffle-hdwallet-provider": "git+https://github.com/propulsor/truffle-hdwallet-provider.git",
+    "web3": "1.0.0-beta.37",
     "websocket": "^1.0.26"
   },
   "devDependencies": {

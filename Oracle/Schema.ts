@@ -4,48 +4,18 @@ import {EndpointSchema} from "./types";
 export const Endpoints:EndpointSchema[] =[
     {
         name: "CoinCapAPI",
-        curve :[2,7e18,1e16,10000000000],
+        curve :[2,7e18,1e16,10000000000],//Price curve, 7 + 0.01x ZAP per dot
         broker: "",
         md: "", //adding md file here
         queryList: [{
             query: "price",
             params: ["from","to"],
             response: ["price"],
-            dynamic: false,
+            dynamic: false,//is set to true if a precision is set. otherwise false
             getResponse: coincapResponder
         }]
-        // },
-        //     {
-        //         query:"",
-        //         params:[],
-        //         response: [],
-        //         dynamic:true,
-        //         getResponse: getResponse
-        //     }]
+       
     }
-    //response format  options  are reponse methods :
-    // dynamic:true  --- respondBytes32Array, respondIntArray,
-    // dynamic:false  --- respond1, respond2, respond3, respond4
+   
 ]
 
-
-
-/**
- * Example for Endpoint Schema
- {
-        name: "CoinBaseSource",
-        curve :[1,1,1e18],
-        queryList: [{
-            query:"price",
-            params:["{coin}","{time}"],
-            response: ["{price}","{notaryHash}"],
-            getResponse: getResponse
-        },
-            {
-                query:"volume",
-                params:["{coin}","{period}"],
-                response: ["{volume}","{notaryHash}"],
-                getResponse: getResponse
-            }]
-    }
- */

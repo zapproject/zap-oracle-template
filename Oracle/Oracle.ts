@@ -210,7 +210,11 @@ export  class Oracle {
             console.log('Unable to find the callback for', event.endpoint);
             return;
         }
-
+        var dyn:boolean = false;// sets dynamic to true if a precision is set.
+        console.log(event.endpointParams[2])
+        if(event.endpointParams[2]){
+            dyn = true
+        }
         console.log(`Received query to ${event.endpoint} from ${event.onchainSub ? 'contract' : 'offchain subscriber'} at address ${event.subscriber}`);
         console.log(`Query ID ${event.queryId.substring(0, 8)}...: "${event.query}". Parameters: ${event.endpointParams}`);
         for (let query of endpoint.queryList) {
@@ -221,7 +225,7 @@ export  class Oracle {
             let res = await provider.respond({
                 queryId: event.queryId,
                 responseParams: response,
-                dynamic: query.dynamic
+                dynamic: dyn
             }).then((txid: any) => {
                 console.log('Responded to', event.subscriber, "in transaction", txid.transactionHash);
             }).catch((e) => {

@@ -3,7 +3,7 @@ import {EndpointSchema} from "./types";
 
 export const Endpoints:EndpointSchema[] =[
     {
-        name: "ipfsEndpoint2",
+        name: "ipfsEndpoint3",
         curve :[1,1,10000000000],
         broker: "",
         md: "", //adding md file here

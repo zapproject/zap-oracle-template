@@ -6,8 +6,8 @@ export const  Config = {
 //==============================================================================================================
 
    title: "Template-Oracle",
-    public_key: "abcdef",
+    public_key: "",
      NODE_WS : "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq",
-    mnemonic :  "pact inside track layer hello carry used silver pyramid bronze drama time"
+    mnemonic :  ""
 
 };

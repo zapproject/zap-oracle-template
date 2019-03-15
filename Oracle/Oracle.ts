@@ -1,67 +1,34 @@
-//==============================================================================================================
-// Dependencies
-//==============================================================================================================
-
 import {Config} from "./Config";
 const Web3 = require('web3');
 import { ZapProvider } from "@zapjs/provider";
 import {ZapToken} from "@zapjs/zaptoken"
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
-import {Endpoints} from "./Schema";
-const {toBN} =require("web3-utils");
+const {toBN,fromWei, hexToUtf8} =require("web3-utils");
 const assert = require("assert")
-import {EndpointSchema, QueryEvent} from "./types";
 const IPFS = require("ipfs-mini")
 const ipfs = new IPFS({host:'ipfs.infura.io',port:5001,protocol:'https'})
 const IPFS_GATEWAY = "https://gateway.ipfs.io/ipfs/"
 
 export  class ZapOracle {
     web3:any
+    oracle:any
+    zapToken:any
     constructor(){
-        this.web3 = new Web3(new HDWalletProviderMem(Config.mnemonic, Config.NODE_WS))
+        this.web3 = new Web3(new HDWalletProviderMem(Config.mnemonic, Config.NODE_URL))
+        this.oracle = null
+        this.zapToken = null
+    }
+    validateConfig() {
+        const EndpointSchema = Config.EndpointSchema
+        assert(Config.mnemonic, "mnemonic is required to run Oracle")
+        assert(Config.title, "title is required to run Oracle")
+        assert(Config.public_key, "public_key is required to run Oracle")
+        assert(EndpointSchema.name, "Endpoint's name is required")
+        assert(EndpointSchema.curve, `Curve is required for endpoint ${EndpointSchema.name}`)
+        assert(EndpointSchema.queryList.length > 0, `query list is recommended for data offer`)
+
     }
 
-    async getWeb3Provider() {
-        return new HDWalletProviderMem(Config.mnemonic, Config.NODE_WS);
-    }
-
-//==============================================================================================================
-// Setup Functions
-//==============================================================================================================
-
-
-
-    validateSchema() {
-        for (let endpoint of Endpoints) {
-            assert(endpoint.name, "Endpoint's name is required")
-            assert(endpoint.curve, `Curve is required for endpoint ${endpoint.name}`)
-            assert(endpoint.curve.length >= 3, `Curve's length is invalid for endpoint ${endpoint.name}`)
-            assert(endpoint.queryList && endpoint.queryList.length >= 1, `query list is required for data offer`)
-        }
-    }
-
-
-    getQueryList(endpointName:string){
-        for(let endpoint of Endpoints){
-            if (endpoint.name == endpointName.toLowerCase()){
-                return endpoint.queryList
-            }
-        }
-        return []
-    }
-
-    getEndpoints(){
-        return Endpoints
-    }
-
-    async delegateBond(subscriber:string,dots:number){
-        let provider = await this.getProvider()
-        let zapToken = new ZapToken({networkId: await this.web3.eth.net.getId(), networkProvider: this.web3})
-        for(let endpoint of Endpoints) {
-            let approve = await zapToken.approve({to:provider.zapBondage.contract._address,from:provider.providerOwner,amount:'100000000000'})
-            await provider.zapBondage.delegateBond({provider: provider.providerOwner, endpoint: endpoint.name,subscriber,dots,from:provider.providerOwner})
-        }
-    }
 
     /**
      * Initializes the oracle. Creates the provider if it does not exist already.
@@ -69,95 +36,92 @@ export  class ZapOracle {
      * Starts listening for queries and calling handleQuery function
      */
     async initialize() {
-        await
-            this.validateSchema()
-        const web3: any = new Web3(await this.getWeb3Provider());
+        await this.validateConfig()
         // Get the provider and contracts
-        const provider = await this.getProvider();
+        await this.getProvider();
         await this.delay(5000)
-        const title = await
-            provider.getTitle();
+        const title = await this.oracle.getTitle();
+        console.log(title)
         if (title.length == 0) {
             console.log("No provider found, Initializing provider");
-            const res: string = await
-                provider.initiateProvider({title: Config.title, public_key: Config.public_key});
-            console.log(res);
+            const res: string = await this.oracle.initiateProvider({title: Config.title, public_key: Config.public_key});
             console.log("Successfully created oracle", Config.title);
         }
         else {
             console.log("Oracle exists");
+            if( title != Config.title){
+              console.log("Changing title")
+              const res:string = await this.oracle.setTitle({title:Config.title})
+              console.log("Successfully changed Title : ",res)
+
+            }
         }
         //Create endpoints if not exists
-        for (let endpoint of Endpoints) {
-            let curveSet = await
-                provider.isEndpointCreated(endpoint.name)
-            if (!curveSet) {
-                //create endpoint
-                console.log("create endpoint")
-                if(endpoint.broker == "")
-                    endpoint.broker = "0x0000000000000000000000000000000000000000"
-                const createEndpoint = await
-                    provider.initiateProviderCurve({endpoint: endpoint.name, term: endpoint.curve, broker: endpoint.broker});
-                console.log("Successfully created endpoint ", createEndpoint)
-                //setting endpoint params with indexed query string
-                let endpointParams:string[] = []
-                for(let query of endpoint.queryList){
-                    endpointParams.push(""+endpoint.queryList.indexOf(query))
-                    endpointParams.push(query.query)
-                    endpointParams.push(...query.params)
+        const endpoint = Config.EndpointSchema
+        let curveSet = await this.oracle.isEndpointCreated(endpoint.name)
+        if (!curveSet) {
+            //create endpoint
+            console.log("No matching Endpoint found, creating endpoint")
+            if(endpoint.broker == "")
+                endpoint.broker = "0x0000000000000000000000000000000000000000"
+            const createEndpoint = await this.oracle.initiateProviderCurve({endpoint: endpoint.name, term: endpoint.curve, broker: endpoint.broker});
+            console.log("Successfully created endpoint ", createEndpoint)
+            //setting endpoint params with indexed query string
+            let endpointParams:string[] = []
+            for(let query of endpoint.queryList){
+                endpointParams.push("Query string :"+ query.query +", Query params :"+JSON.stringify(query.params)+", Response Type: "+query.responseType)
+            }
+            console.log("Setting endpoint params")
+
+            const txid = await this.oracle.setEndpointParams({endpoint: endpoint.name, endpoint_params: endpointParams})
+            console.log(txid)
+            // setting {endpoint.json} file and save it to ipfs
+            let ipfs_endpoint:any = {}
+            ipfs_endpoint.name =  endpoint.name
+            ipfs_endpoint.curve = endpoint.curve
+            ipfs_endpoint.broker = endpoint.broker
+            ipfs_endpoint.params = endpointParams
+            // add to ipfs file
+            console.log("Saving Endpoint info into ipfs")
+            ipfs.addJSON(ipfs_endpoint,(err:any,res:any)=>{
+                if(err){
+                    console.error("Fail to save endpoint data to ipfs : ", ipfs_endpoint)
+                    process.exit(err)
                 }
-                await provider.setEndpointParams({endpoint: endpoint.name, endpoint_params: endpointParams})
-                // setting {endpoint.json} file and save it to ipfs
-                let ipfs_endpoint:any = {}
-                ipfs_endpoint.name =  endpoint.name
-                ipfs_endpoint.curve = endpoint.curve
-                ipfs_endpoint.broker = endpoint.broker
-                ipfs_endpoint.params = endpointParams
-                // add to ipfs file
-                ipfs.addJSON(ipfs_endpoint,(err:any,res:any)=>{
-                    if(err){
-                        console.error("Fail to save endpoint data to ipfs : ", ipfs_endpoint)
-                        process.exit(err)
-                    }
-                    //save ipfs hash to provider param
-                    provider.setProviderParameter({key:`${endpoint.name}.json`,value:IPFS_GATEWAY+res})
-                        .then((txid)=>{console.log("saved endpoint info to param with hash : ",res,txid)})
+                //save ipfs hash to this.oracle param
+                console.log("Successfully saved Endpoint json file into ipfs, saving ipfs link to oracle's params")
+                this.oracle.setProviderParameter({key:`${endpoint.name}.json`,value:IPFS_GATEWAY+res})
+                    .then((txid:string)=>{console.log("saved endpoint info to param with hash : ",res,txid)})
+            })
+            //if there is a md string => save to provider params
+            if(endpoint.md && endpoint.md!=""){
+                ipfs.add(endpoint.md,(err:any,res:any)=>{
+                  if(err){
+                      console.error("Fail to save endpoint .md file to ipfs", endpoint)
+                      process.exit(err)
+                  }
+                  //set ipfs hash as provider param
+                  this.oracle.setProviderParameter({key:`${endpoint.name}.md`,value:IPFS_GATEWAY+res})
+                    .then((txid:string)=>{console.log("saved endpoint info to param with hash : ",res,txid)})
+
                 })
-                //if there is a md string => save to provider params
-                if(endpoint.md!=""){
-                    ipfs.add(endpoint.md,(err:any,res:any)=>{
-                      if(err){
-                          console.error("Fail to save endpoint .md file to ipfs", endpoint)
-                          process.exit(err)
-                      }
-                      //set ipfs hash as provider param
-                      provider.setProviderParameter({key:`${endpoint.name}.md`,value:IPFS_GATEWAY+res})
-                        .then((txid)=>{console.log("saved endpoint info to param with hash : ",res,txid)})
-
-                    })
-                }
             }
-            else {
-                console.log("curve is set : ", await
-                    provider.getCurve(endpoint.name)
-                )
+            else{
+              console.log("No md value file, skipping")
             }
-            //Right now each endpoint can only store 1 set of params, so not storing params for more flexibility
-            // else {
-            //     //check params
-            //     let params = await provider.getEndpointParams(endpoint.name)
-            //     if (params.length == 0 && endpoint.params.length > 1) {
-            //         await provider.setEndpointParams({endpoint: endpoint.name, params: endpoint.params}) //todo zapjs needs to implement this
-            //     }
-            // }
-            provider.listenQueries({}, (err: any, event: any) => {
-                if (err) {
-                    throw err;
-                }
-
-                this.handleQuery(provider, endpoint, event, web3);
-            });
         }
+        else {
+          //Endpoint is initialized, so ignore all the setup part and listen to Query
+            console.log("curve is already  set : ", await this.oracle.getCurve(endpoint.name))
+        }
+        console.log("Start listening and responding to queries")
+        this.oracle.listenQueries({}, (err: any, event: any) => {
+            if (err) {
+                throw err;
+            }
+            this.handleQuery(event);
+        });
+
     }
 
     /**
@@ -167,18 +131,22 @@ export  class ZapOracle {
      */
 
     delay = (ms:number) => new Promise(_ => setTimeout(_, ms));
-    async getProvider(): Promise<ZapProvider> {
+    async getProvider() {
         // loads the first account for this web3 provider
         const accounts: string[] = await this.web3.eth.getAccounts();
-        if (accounts.length == 0) throw('Unable to find an account in the current web3 provider');
+        if (accounts.length == 0) throw('Unable to find an account in the current web3 provider, check your Config variables');
         const owner: string = accounts[0];
-        console.log("Loaded account:", owner);
-        // TODO: Add Zap balance
-        console.log("Wallet contains:", await this.web3.eth.getBalance(owner) / 1e18, "ETH");
-        return new ZapProvider(owner, {
+        this.oracle = new ZapProvider(owner, {
             networkId: (await this.web3.eth.net.getId()).toString(),
             networkProvider:this.web3.currentProvider
         });
+        this.zapToken = new ZapToken({
+            networkId: (await this.web3.eth.net.getId()).toString(),
+            networkProvider:this.web3.currentProvider
+        })
+        const ethBalance = await this.web3.eth.getBalance(owner)
+        const zapBalance = await this.zapToken.balanceOf(owner)
+        console.log("Wallet contains:", fromWei(ethBalance,"ether"),"ETH ;", fromWei(zapBalance,"ether"),"ZAP");
     }
 
 //==============================================================================================================
@@ -193,40 +161,44 @@ export  class ZapOracle {
      */
 
 
-    async handleQuery(provider: ZapProvider, endpoint: EndpointSchema, queryEvent: any, web3: any): Promise<void> {
+    async handleQuery(queryEvent: any): Promise<void> {
         const results: any = queryEvent.returnValues;
         let response: string[] | number[]
         // Parse the event into a usable JS object
-        const event: QueryEvent = {
+        const event: any = {
             queryId: results.id,
             query: results.query,
-            endpoint: web3.utils.hexToUtf8(results.endpoint),
+            endpoint: hexToUtf8(results.endpoint),
             subscriber: results.subscriber,
-            endpointParams: results.endpointParams.map(web3.utils.hexToUtf8),
+            endpointParams: results.endpointParams.map(hexToUtf8),
             onchainSub: results.onchainSubscriber
         }
-        if (event.endpoint != endpoint.name) {
+        if (event.endpoint != Config.EndpointSchema.name) {
             console.log('Unable to find the callback for', event.endpoint);
             return;
         }
+        console.log(results)
 
         console.log(`Received query to ${event.endpoint} from ${event.onchainSub ? 'contract' : 'offchain subscriber'} at address ${event.subscriber}`);
         console.log(`Query ID ${event.queryId.substring(0, 8)}...: "${event.query}". Parameters: ${event.endpointParams}`);
-        for (let query of endpoint.queryList) {
-            // Call the responder callback
-            response = await
-                query.getResponse(event)
-            // Send the response
-            let res = await provider.respond({
-                queryId: event.queryId,
-                responseParams: response,
-                dynamic: query.dynamic
-            }).then((txid: any) => {
-                console.log('Responded to', event.subscriber, "in transaction", txid.transactionHash);
-            }).catch((e) => {
-                console.error(e)
-                throw new Error(`Error responding to query ${event.queryId} : ${e}`)
-            })
+        for (let query of Config.EndpointSchema.queryList) {
+            try{
+              // Call the responder callback to get the data needed for this query
+              let response = await query.getResponse(event.query,[])
+              console.log("got response from getResponse method : ", response)
+
+              // Send the response
+              console.log("Responding to offchain subscriber : ")
+                let txid = await this.oracle.respond({
+                    queryId: event.queryId,
+                    responseParams: response,
+                    dynamic: query.dynamic
+                })
+
+              console.log('Responded to', event.subscriber, "in transaction", txid.transactionHash);
+            }catch(e){
+              throw new Error(`Error responding to query ${event.queryId} : ${e}`)
+            }
         }
     }
 }

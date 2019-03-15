@@ -3,14 +3,14 @@ import {EndpointSchema} from "./types";
 
 export const Endpoints:EndpointSchema[] =[
     {
-        name: "CoinCapAPI",
-        curve :[2,7e18,1e16,10000000000],//Price curve, 7 + 0.01x ZAP per dot
+        name: "CoinCapV2",
+        curve :[1,1,10000000000],//Price curve, 7 + 0.01x ZAP per dot
         broker: "",
         md: "", //adding md file here
         queryList: [{
-            query: "price",
-            params: ["from","to"],
-            response: ["price"],
+            query: "toUSD",
+            params: ["from","precision"],
+            response: ["result"],
             dynamic: false,//is set to true if a precision is set. otherwise false
             getResponse: coincapResponder
         }]

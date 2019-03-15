@@ -211,8 +211,8 @@ export  class Oracle {
             return;
         }
         var dyn:boolean = false;// sets dynamic to true if a precision is set.
-        console.log(event.endpointParams[2])
-        if(event.endpointParams[2]){
+        console.log(event.endpointParams[1])
+        if(event.endpointParams[1]){
             dyn = true
         }
         console.log(`Received query to ${event.endpoint} from ${event.onchainSub ? 'contract' : 'offchain subscriber'} at address ${event.subscriber}`);

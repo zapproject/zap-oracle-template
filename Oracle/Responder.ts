@@ -27,7 +27,7 @@ export async function coincapResponder(event:QueryEvent){
 	const { queryId, query, endpoint, subscriber, endpointParams, onchainSub } = event;
     // Also see ORacle.ts line 213
     try{
-    var coincapURL:string="http://coincap.io/page/"+endpointParams[0].toUpperCase();
+    var coincapURL:string="https://api.coincap.io/v2/assets/"+endpointParams[0].toLowerCase();
     // Generate the URL to fetch the JSON from coincap website. Finds the information using the first parameter
     const body:any = await requestPromise(coincapURL);
     // Make a get request to the generated URL to fetch the JSON
@@ -35,21 +35,18 @@ export async function coincapResponder(event:QueryEvent){
     // Formate the JSON to be more accesible
     var price:any;
     // Initialize the return value as either a string or an integer
-    var convert:string = "price_"+endpointParams[1].toLowerCase();
-    // 
-    if(json[convert])//If the conversion exists, return the exchange rate.
-        price=json[convert]
-    else//if the conversion doesnt exist, return the price of the unit in ether.
-        price=json["price_eth"]
-    console.log("coincap",price)
-    if(endpointParams[2]){
+    price=json["data"]["priceUsd"]
+    
+    if(endpointParams[1]){
         // If a precision is added, multiplies the price by 10^precision and returns the answer as an integer
-        var precision:number = parseInt(endpointParams[2])
+        var precision:number = parseInt(endpointParams[1])
         price = (price)*(10**precision)
+        console.log("coincap", Math.floor(price));
         return[Math.floor(price)]
     }
     else{
         // Otherwise returns the price as a string
+        console.log("coincap", price);
         return [""+price];
     }
     }

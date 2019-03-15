@@ -1,5 +1,4 @@
-import {Oracle} from "./Oracle";
+import {ZapOracle} from "./Oracle";
 
-const oracle = new Oracle()
+const oracle = new ZapOracle()
 oracle.initialize().catch(console.error)
-

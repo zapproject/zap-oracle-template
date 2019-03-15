@@ -4,4 +4,9 @@ Oracle/*.js
 src/*.js
 yarn.lock
 yarn-error.log
+<<<<<<< HEAD
 
+=======
+lib
+.idea
+>>>>>>> a402378053615ab888890a3f9b3b462c931e80d5

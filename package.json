@@ -5,8 +5,8 @@
   "main": "Oracle/index.js",
   "scripts": {
     "build": "./node_modules/.bin/tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "run-s build node lib/Oracle"
+    "oracle": "node lib/index.js",
+    "start": "run-s build oracle"
   },
   "keywords": [
     "Zap",
@@ -18,18 +18,19 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^10.12.12",
-    "@zapjs/artifacts": "^2.1.2",
-    "@zapjs/bondage": "^2.0.15",
-    "@zapjs/dispatch": "^2.0.17",
     "@zapjs/provider": "^2.0.18",
     "@zapjs/subscriber": "^2.0.14",
     "@zapjs/zaptoken": "^2.0.15",
-    "express": "^4.16.4",
-    "ipfs-mini": "^1.1.2",
+    "ccxt": "^1.18.364",
+    "cxxt": "^1.0.1",
+    "ipfs-mini": "^1.1.5",
+    "node-binance-api": "^0.9.0",
     "path": "^0.12.7",
     "request": "^2.88.0",
-    "truffle-hdwallet-provider": "git+https://github.com/propulsor/truffle-hdwallet-provider",
-    "web3": "^1.0.0-beta.36",
+    "request-promise": "^4.2.4",
+    "require": "^2.4.20",
+    "truffle-hdwallet-provider": "git+https://github.com/propulsor/truffle-hdwallet-provider.git",
+    "web3": "1.0.0-beta.37",
     "websocket": "^1.0.26"
   },
   "devDependencies": {

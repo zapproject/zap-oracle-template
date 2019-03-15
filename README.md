@@ -1,23 +1,38 @@
 # Zap-oracle-template
 
-Template for creating and managing your own zap oracle with ease
 
-## Layout :
+## Purpose :
+To help users fully creating and running an off-chain Oracle with just couple config and 1 function implementation.
+## ORACLE TEMPLATE SETUP EXPLAINED
 
-1. Config : data about your wallet ,ethereum node and your provider's pubkey and title
-2. Schema : Your oracle's endpoint list with their params and pre-defined query/response schema
-3. Oracle : Template for Create/Manage flow
-4. Responder :  Stub callback function when receive query event and return result
+### Config Setting :
+  - Oracle's information :
+    + Title, Public key, Mnemonic, Node URL
+    + Endpoint : Name, Curve, broker, md (description about endpoint), query list ( query string accepted and response type)
+### What will be created  once setup and run:
+1. Oracle registered if none exists
+2. Endpoint created if Endpoint name in config has not been created
+  + Endpoint.json file will be created containing information about query list and endpoint, saved in ipfs and set as Endpoint's params on-chain
+  + Endpoint.md file will be created, saved in ipfs and set as Provider's params on-chain
+3. If Endpoint is already initiated, the step 2 will be ignored
 
-## Usage :
 
-1. Configure config and schema
-2. Implement function `getResponse` in Responder
+### Code Layout :
+
+1. Config.ts : data about your wallet ,ethereum node and your provider's pubkey and title
+3. Oracle.ts : Template for Create/Manage  flow
+4. Responder.ts :  Stub callback function when receive query event and return result
+
+### Usage :
+
+1. Configure Config.ts
+2. Implement function `getResponse` in Responder.ts
 3. Run `npm start` to start create/get Oracle and start listening to queries   
 
 ## Note :
 
 - Ensure you have enough ETH in your address for responding to queries
+<<<<<<< HEAD
 ## Oracle Setup Explained
 - `npm start` will run `Oracle/index.js` `initialize()` funcfion
 1. Find info about the current node in `config.js` file, including link to parity/geth node and mnemonic
@@ -77,3 +92,5 @@ Template for creating and managing your own zap oracle with ease
 	+ https://api.kraken.com/0/public/AssetPairs
 - Gemini
 	+ https://api.gemini.com/v1/symbols
+=======
+>>>>>>> a402378053615ab888890a3f9b3b462c931e80d5

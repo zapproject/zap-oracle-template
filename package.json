@@ -21,8 +21,6 @@
     "@zapjs/provider": "^2.0.18",
     "@zapjs/subscriber": "^2.0.14",
     "@zapjs/zaptoken": "^2.0.15",
-    "ccxt": "^1.18.364",
-    "cxxt": "^1.0.1",
     "ipfs-mini": "^1.1.5",
     "node-binance-api": "^0.9.0",
     "path": "^0.12.7",

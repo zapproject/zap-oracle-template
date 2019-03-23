@@ -13,7 +13,9 @@
 		"noImplicitReturns": true,
 		"pretty": true,
 		"skipLibCheck": true,
-		"strict": true
+		"strict": true,
+		"resolveJsonModule":true,
+		 "esModuleInterop": true 
 	},
 	"include": [
 		"./Oracle/**/*", "*.ts"

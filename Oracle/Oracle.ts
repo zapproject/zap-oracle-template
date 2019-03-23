@@ -1,4 +1,5 @@
-import {Config} from "./Config";
+import {getResponse} from "./Responder"
+import * as Config from "./Config.json"
 const Web3 = require('web3');
 import { ZapProvider } from "@zapjs/provider";
 import {ZapToken} from "@zapjs/zaptoken"
@@ -184,7 +185,7 @@ export  class ZapOracle {
         for (let query of Config.EndpointSchema.queryList) {
             try{
               // Call the responder callback to get the data needed for this query
-              let response = await query.getResponse(event.query,[])
+              let response = await getResponse(event.query,[])
               console.log("got response from getResponse method : ", response)
 
               // Send the response

@@ -8,7 +8,7 @@ export const  Config = {
 
     title: "Title",
     public_key: "abcdef",
-    NODE_URL : "wss://kovan.infura.io/ws",
+    NODE_URL : "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq",
     mnemonic :  "",
     EndpointSchema:{
         name: "CoinCapV2",

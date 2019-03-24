@@ -8,18 +8,18 @@ export const  Config = {
 
     title: "Title",
     public_key: "abcdef",
-    NODE_URL : "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq",
-    mnemonic :  "pact inside track layer hello carry used silver pyramid bronze drama time",
+    NODE_URL : "wss://kovan.infura.io/ws",
+    mnemonic :  "",
     EndpointSchema:{
         name: "CoinCapV2",
-        curve :[1,1,10000000000],//Price curve, 7 + 0.01x ZAP per dot
+        curve :[2,7000000000000000000,10000000000000000,10000000],//price curve, 10000000000000000x + 7000000000000000000, https://bit.ly/2JBGDNU 
         broker: "",
         md: "", //adding md file here
         queryList: [{
             query: "toUSD",
             params: ["from","precision"],
             response: ["result"],
-            dynamic: false,//is set to true if a precision is set. otherwise false
+            dynamic: true,//is set to true if a precision is set. otherwise false
             responseType:"[int]",
             getResponse: coincapResponder
         }] // can add more query types into this list

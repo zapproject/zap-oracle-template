@@ -21,13 +21,14 @@
     "@zapjs/provider": "^2.0.18",
     "@zapjs/subscriber": "^2.0.14",
     "@zapjs/zaptoken": "^2.0.15",
-    "ipfs-mini": "^1.1.5",
     "node-binance-api": "^0.9.0",
     "path": "^0.12.7",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "truffle-hdwallet-provider": "git+https://github.com/propulsor/truffle-hdwallet-provider.git",
     "web3": "1.0.0-beta.37",
+    "web3-shh": "^1.0.0-beta.52",
+    "web3-utils": "^1.0.0-beta.52",
     "websocket": "^1.0.26"
   },
   "devDependencies": {

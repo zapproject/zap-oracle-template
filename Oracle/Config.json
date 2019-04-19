@@ -4,6 +4,7 @@
 	"public_key": "Public key",
 	"NODE_URL": "wss://mainnet.infura.io/ws/v3/63dbbe242127449b9aeb061c6640ab95",
 	"mnemonic": "",
+	"STATUS_URL":"",
 	"EndpointSchema": {
 		"name": "",
 		"curve": [2,

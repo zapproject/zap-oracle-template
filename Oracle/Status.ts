@@ -7,7 +7,8 @@ import {toHex,utf8ToHex} from "web3-utils"
 import {ZapProvider} from "@zapjs/provider"
 import {ZapBondage} from "@zapjs/bondage"
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
-const w3 = new Web3(new HDWalletProviderMem(Config.mnemonic, Config.NODE_URL))
+const io =require("socket.io-client");
+import * as Config from "./Config.json"
 
 const rq = require("request-promise")
 const ZAP_SERVER = "http://localhost:8000"
@@ -19,7 +20,7 @@ export const updateStatus = function(web3:any,oracle:any,endpoint:any){
   },3*60*1000) //every  minutes
 }
 
-async function update(web3:any,oracle:any,endpoint:any){
+async function update(web3:any,oracle:any,endpoint:string){
   console.log("update status")
   try{
     let time = new Date().getTime()
@@ -40,4 +41,23 @@ async function update(web3:any,oracle:any,endpoint:any){
   }catch(e){
     console.error(e)
   }
+}
+
+
+export const connectStatus= async (web3:any,endpoint:any)=>{
+  let accounts = await web3.eth.getAccounts()
+  let oracle = accounts[0]
+  console.log(oracle)
+  let socket = io(Config.STATUS_URL,{path:"/ws/",secure:true})
+  socket.on("connect",async ()=>{
+    const signature = await web3.eth.sign(endpoint,oracle)
+    console.log(signature)
+    socket.emit("authentication",{endpoint:"TrendSignals",signature})
+  })
+  socket.on("authenticated",()=>{
+    console.log("authenticated")
+  })
+  socket.on("unauthorized",()=>{
+    console.log("unauthorized")
+  })
 }

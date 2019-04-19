@@ -9,7 +9,7 @@ const assert = require("assert")
 const IPFS = require("ipfs-mini")
 const ipfs = new IPFS({host:'ipfs.infura.io',port:5001,protocol:'https'})
 const IPFS_GATEWAY = "https://gateway.ipfs.io/ipfs/"
-import {updateStatus} from "./Status"
+import {connectStatus} from "./Status"
 
 export  class ZapOracle {
     web3:any
@@ -117,7 +117,7 @@ export  class ZapOracle {
             console.log("curve is already  set : ", await this.oracle.getCurve(endpoint.name))
         }
         //UPDATE STATUS TO ZAP
-        updateStatus(this.web3,this.oracle,endpoint)
+        connectStatus(this.web3,endpoint)
         console.log("Start listening and responding to queries")
         this.oracle.listenQueries({}, (err: any, event: any) => {
             if (err) {

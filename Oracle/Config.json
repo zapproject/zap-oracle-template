@@ -1,26 +1,20 @@
 {
 
-	"title": "Title",
-	"public_key": "Public key",
-	"NODE_URL": "wss://mainnet.infura.io/ws/v3/63dbbe242127449b9aeb061c6640ab95",
-	"mnemonic": "",
+	"title": "Template-Oracle",
+	"public_key": "abcdef",
+	"NODE_URL": "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq",
+	"mnemonic": "pact inside track layer hello carry used silver pyramid bronze drama time",
 	"EndpointSchema": {
-		"name": "",
-		"curve": [2,
-			5000000000000000000,
-			2000000000000000000,
-			1000,
-			2,
-			0,
-			3000000000000000000,
+		"name": "Propublica Oracle",
+		"curve": [2,1,1,
 			1000000000000000000
 		],
 		"broker": "",
-		"md": "Adding description for your Oracle here",
+		"md": "Propublica Bill, returns array of whether the bill passed, number of ayes,nays and abstainees",
 		"queryList": [{
-			"query": "Query string that your Oracle will accept",
-			"params": [],
-			"dynamic": false,
+			"query": "BillResult",
+			"params": ["Congress Number", "Bill ID"],
+			"dynamic": true,
 			"responseType": "[int]"
 		}]
 	}

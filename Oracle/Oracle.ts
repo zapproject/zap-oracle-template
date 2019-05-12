@@ -188,7 +188,7 @@ export  class ZapOracle {
         for (let query of Config.EndpointSchema.queryList) {
             try{
               // Call the responder callback to get the data needed for this query
-              let response = await getResponse(event.query,[])
+              let response = await getResponse(event.query,event.endpointParams)
               console.log("got response from getResponse method : ", response)
 
               // Send the response

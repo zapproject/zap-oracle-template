@@ -8,7 +8,6 @@ import {ZapProvider} from "@zapjs/provider"
 import {ZapBondage} from "@zapjs/bondage"
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
 const io =require("socket.io-client");
-import * as Config from "./Config.json"
 
 const rq = require("request-promise")
 const ZAP_SERVER = "http://localhost:8000"

@@ -26,7 +26,7 @@ export async function getResponse(query:string,params:string[]|[]){
 	//Get data based on the query string and Parameters
 
 		 try  {
-        var timestamp:any = Date.parse(params[2])/1000
+        var timestamp:any = parseInt(params[2])//Date.parse(params[2])/1000
         // var timestamp:any = Date.parse('2019-01-01T03:24:00')/1000
         console.log(timestamp)
         var url:string = "https://api.github.com/repos/"+params[0]+"/"+params[1]+"/stats/contributors"//?w="+timestamp;

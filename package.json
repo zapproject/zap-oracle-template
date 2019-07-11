@@ -33,7 +33,7 @@
     "web3-shh": "^1.0.0-beta.52",
     "web3-utils": "^1.0.0-beta.52",
     "websocket": "^1.0.26",
-    "ipfs-mini":"^1.0"
+    "ipfs-mini": "^1.0"
   },
   "devDependencies": {
     "babel-polyfill": "^6.26.0",

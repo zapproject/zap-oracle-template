@@ -6,7 +6,7 @@
 	"mnemonic": "",
 	"STATUS_URL":"",
 	"EndpointSchema": {
-		"name": "",
+		"name": "GitCommits",
 		"curve": [2,
 			5000000000000000000,
 			2000000000000000000,
@@ -21,7 +21,7 @@
 		"queryList": [{
 			"query": "Query string that your Oracle will accept",
 			"params": [],
-			"dynamic": false,
+			"dynamic": true,
 			"responseType": "[int]"
 		}]
 	}

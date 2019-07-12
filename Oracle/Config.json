@@ -2,18 +2,18 @@
 
 	"title": "Title",
 	"public_key": "Public key",
-	"NODE_URL": "wss://mainnet.infura.io/ws/v3/63dbbe242127449b9aeb061c6640ab95",
+	"NODE_URL": "wss://kovan.infura.io/ws/xeb916AFjrcttuQlezyq",
 	"mnemonic": "",
 	"STATUS_URL":"",
 	"EndpointSchema": {
 		"name": "GitCommits",
 		"curve": [2,
-			5000000000000000000,
-			2000000000000000000,
+			5,
+			2,
 			1000,
 			2,
 			0,
-			3000000000000000000,
+			3,
 			1000000000000000000
 		],
 		"broker": "",

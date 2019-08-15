@@ -2,11 +2,14 @@
 
 	"title": "Title",
 	"public_key": "Public key",
-	"NODE_URL": "wss://mainnet.infura.io/ws/v3/63dbbe242127449b9aeb061c6640ab95",
-	"mnemonic": "",
+	"NODE_URL": "https://api.jungle.alohaeos.com",
+	"mnemonic": "silver traffic ready ocean horror shaft foil miss code ribbon liberty glove",
+	"chain_id": "1",
+	"zapcontract": "zapcoretest4",
+	"zaptokencontract": "zaptokentest",
 	"STATUS_URL":"",
 	"EndpointSchema": {
-		"name": "",
+		"name": "e",
 		"curve": [2,
 			5000000000000000000,
 			2000000000000000000,

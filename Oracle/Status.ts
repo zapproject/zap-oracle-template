@@ -3,16 +3,13 @@
 */
 /*import * as Config from "./Config.json"
 const Web3 = require('web3');
-import {toHex,utf8ToHex} from "web3-utils"
-import {ZapProvider} from "@zapjs/provider"
-import {ZapBondage} from "@zapjs/bondage"
 const HDWalletProviderMem = require("truffle-hdwallet-provider");
 const io =require("socket.io-client");
 
 const rq = require("request-promise")
 const ZAP_SERVER = "http://localhost:8000"
 
-/*export const updateStatus = function(web3:any,oracle:any,endpoint:any){
+export const updateStatus = function(web3:any,oracle:any,endpoint:any){
   update(web3,oracle,endpoint)
   setInterval(()=>{
     update(web3,oracle,endpoint)

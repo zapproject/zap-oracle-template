@@ -9,13 +9,10 @@ const IPFS = require("ipfs-mini")
 const ipfs = new IPFS({host:'ipfs.infura.io',port:5001,protocol:'https'})
 const IPFS_GATEWAY = "https://gateway.ipfs.io/ipfs/"
 //import {connectStatus} from "./Status"
-const hdkey = require('hdkey');
-const wif = require('wif');
-const bip39 = require('bip39');
+//import io from 'socket.io-client';
+import { getPrivateKey, getEncodedName, sleep } from "./utils";
 const ecc = require("eosjs-ecc");
 const BigNumber = require('big-number');
-import { Serialize, Numeric } from 'eosjs';
-
 
 export  class ZapOracle {
     node:any;
@@ -24,10 +21,9 @@ export  class ZapOracle {
     zapToken:any;
     constructor(){
         this.node = new Node({
-            key_provider: ['5KRuasWaLFJ7cSRYp3ituHXwb8dhxZXjsGdRvF3A1uWBkVcjNzQ'],//[this.getPrivateKey(Config.mnemonic)],
+            key_provider: [getPrivateKey(Config.mnemonic)],
             verbose: false,
-            http_endpoint:
-            Config.NODE_URL,
+            http_endpoint: Config.NODE_URL,
             contract: Config.zapcontract,
             chain_id: Config.chain_id
         });
@@ -52,26 +48,27 @@ export  class ZapOracle {
      * Starts listening for queries and calling handleQuery function
      */
     async initialize() {
+    
         await this.validateConfig()
-        // Get the provider and contracts
+        // Get the provider object
         await this.getProvider();
-        await this.delay(5000)
-        const title = await this.oracle.getTitle();
-        console.log(title)
-        if (title.length == 0) {
-            console.log("No provider found, Initializing provider");
-            const res: string = await this.oracle.setTitle(Config.title);
-            console.log("Successfully created oracle", Config.title);
-        }
-        else {
-            console.log("Oracle exists");
-            if( title != Config.title){
-              console.log("Changing title")
-              const res:string = await this.oracle.setTitle(Config.title)
-              console.log("Successfully changed Title : ",res)
-
+        //Create provider in registry if not exists
+        const {rows: providers} = await this.oracle.queryProviderList(0, -1, -1);
+        const foundProviders = providers.filter((row: any) => row.user === this.oracle.getAccount().name);
+        if (!foundProviders.length) {
+            try {
+                await this.oracle.initiateProvider(Config.title, Config.public_key);
+                console.log(`Provider created for account ${this.oracle.getAccount().name}. 
+                Title: ${Config.title}.
+                Public Key: ${Config.public_key}.`)
+            } catch(err) {
+                console.log(`Error creating provider for account ${this.oracle.getAccount().name}`);
+                throw err;
             }
-        }
+        } else {
+            const {user, title, key} = foundProviders[0];
+            console.log(`Found provider "${user}" with title: "${title}" and key: "${key}".`)
+        } 
         //Create endpoints if not exists
         const endpoint = Config.EndpointSchema
         let curveSet = await this.endpointCreated(endpoint.name)
@@ -79,7 +76,7 @@ export  class ZapOracle {
             //create endpoint
             console.log("No matching Endpoint found, creating endpoint")
             const createEndpoint = await this.oracle.addEndpoint(endpoint.name, endpoint.curve, endpoint.broker);
-            console.log("Successfully created endpoint ", createEndpoint.transactionId)
+            console.log("Successfully created endpoint ", createEndpoint)
             //setting endpoint params with indexed query string
             let endpointParams:string[] = []
             for(let query of endpoint.queryList){
@@ -99,23 +96,25 @@ export  class ZapOracle {
             console.log("Saving Endpoint info into ipfs")
             ipfs.addJSON(ipfs_endpoint,(err:any,res:any)=>{
                 if(err){
-                    console.error("Fail to save endpoint data to ipfs : ", ipfs_endpoint)
-                    process.exit(err)
+                    console.error("Fail to save endpoint data to ipfs : ", ipfs_endpoint);
+                    console.log('ERR:', err);
+                    //process.exit(err)
                 }
                 //save ipfs hash to this.oracle param
                 console.log("Successfully saved Endpoint json file into ipfs, saving ipfs link to oracle's params")
-                this.oracle.setProviderParameter({key:`${endpoint.name}.json`,value:IPFS_GATEWAY+res})
-                    .then((txid:string)=>{console.log("saved endpoint info to param with hash : ",res,txid)})
+                this.oracle.setParams('', {key:`${endpoint.name}.json`,value:IPFS_GATEWAY+res})
+                    .then((txid:string)=>{console.log("saved endpoint info to param with hash : ",res,txid)});
             })
             //if there is a md string => save to provider params
             if(endpoint.md && endpoint.md!=""){
                 ipfs.add(endpoint.md,(err:any,res:any)=>{
                   if(err){
                       console.error("Fail to save endpoint .md file to ipfs", endpoint)
+                      console.log('ERR:', err);
                       process.exit(err)
                   }
                   //set ipfs hash as provider param
-                  this.oracle.setProviderParameter({key:`${endpoint.name}.md`,value:IPFS_GATEWAY+res})
+                  this.oracle.setParams('', {key:`${endpoint.name}.md`,value:IPFS_GATEWAY+res})
                     .then((txid:string)=>{console.log("saved endpoint info to param with hash : ",res,txid)})
 
                 })
@@ -129,9 +128,15 @@ export  class ZapOracle {
             console.log("curve is already  set : ", curveSet[0].functions);
         }
         console.log("Start listening and responding to queries")
+
+        /*  TO-DO for prod: one server for all oracles caching and retranslating events, using our listening API
+            const endp = io.connect('http://some-listening-server.com/events/query');
+            endp.on('start', (resp: any) => console.log(resp.message));
+            endp.on('data', (resp: any) => console.log(resp.data, 'handle as below'));
+        */
         const listener =  new DemuxEventListener();
         DemuxEventListener.start([Config.NODE_URL, Config.zapcontract, 1000, 'smallListener']);
-        listener.on('zapcoretest4::query', (err: any, eventArray: any) => {
+        listener.on(`${Config.zapcontract}::query`, (err: any, eventArray: any) => {
             const event = eventArray[0];
             if (err && event.provider === this.oracle.getAccount().name && event.endpoint === Config.EndpointSchema.name) {
                 throw err;
@@ -143,46 +148,13 @@ export  class ZapOracle {
 
     }
 
-    /**
-     * Loads a ZapProvider from a given Web3 instance
-     * @param web3 - WebSocket Web3 instance to load from
-     * @returns ZapProvider instantiated
-     */
-
-    delay = (ms:number) => new Promise(_ => setTimeout(_, ms));
-
-    getPrivateKey(mnemonic: string) {
-        const seed = bip39.mnemonicToSeedHex(mnemonic)
-            const master = hdkey.fromMasterSeed(new Buffer(seed, 'hex'))
-            const nodem = master.derive("m/44'/194'/0'/0/0")
-            return  wif.encode(128, nodem._privateKey, false);
-    }
-
     async endpointCreated(name: string) {
         const { rows } = await this.oracle.queryProviderEndpoints(0, -1, -1);
         return rows.filter((row: any) => row.specifier === name);
     }
 
-    sleep(timeout: number): Promise<void> {
-        return new Promise((resolve, reject) => {
-            setTimeout(resolve, timeout);
-        })
-    }
-
-    getEncodedName(name: string) {
-        const buffer: Serialize.SerialBuffer = new Serialize.SerialBuffer(
-            {
-                textEncoder: this.oracle.getNode().api.textEncoder,
-                textDecoder: this.oracle.getNode().api.textDecoder
-            }
-        );
-        buffer.pushName(name);
-        return Numeric.binaryToDecimal(buffer.getUint8Array(8));
-      }
-
     async getProvider() {
-        const accounts: any = await this.node.rpc.history_get_key_accounts(ecc.privateToPublic('5KRuasWaLFJ7cSRYp3ituHXwb8dhxZXjsGdRvF3A1uWBkVcjNzQ'));
-        console.log(ecc.privateToPublic('5KRuasWaLFJ7cSRYp3ituHXwb8dhxZXjsGdRvF3A1uWBkVcjNzQ'));
+        const accounts: any = await this.node.rpc.history_get_key_accounts(ecc.privateToPublic(getPrivateKey(Config.mnemonic)));
         if (accounts.account_names.length == 0) throw('Unable to find an accounts, check your Config variables');
         const providerAcc = new Account(accounts.account_names[0]);
 		this.oracle = new Provider({
@@ -198,24 +170,13 @@ export  class ZapOracle {
         console.log("Wallet contains:", eosBalance, " ", zapBalance);
     }
 
-//==============================================================================================================
-// Query Handler
-//==============================================================================================================
-
-    /**
-     * Handles a query
-     * @param writer - HTTP Web3 instance to respond to query with
-     * @param queryEvent - Web3 incoming query event
-     * @returns ZapProvider instantiated
-     */
-
     async getQueryId(timestamp: number, subscriber: string) {
         let queries: any[] = [];
-        const encodedName = new BigNumber(this.getEncodedName(this.oracle.getAccount().name), false);
+        const encodedName = new BigNumber(getEncodedName(this.oracle.getAccount().name, this.oracle), false);
         encodedName.plus(1);
         return new Promise(async (resolve, reject) => {
             while(!queries.length) {
-				await this.sleep(500);
+				await sleep(500);
 				const res = await this.oracle.queryQueriesInfo(encodedName.minus(1).toString(), encodedName.plus(1).toString(), -1, 2);
 				if (res.rows.length) {
                     queries = res.rows.filter((row: any) =>  row.subscriber === subscriber && row.timestamp === timestamp);
@@ -254,8 +215,13 @@ export  class ZapOracle {
 
               // Send the response
               console.log("Responding to offchain subscriber : ")
-                let txid = await this.oracle.respond(event.queryId, response, event.subscriber);
-              console.log('Responded to', event.subscriber, "in transaction", txid.transactionHash);
+                 try {
+                    let txid = await this.oracle.respond(event.queryId, response, event.subscriber);
+                } catch (e) {
+                    console.log('\nCaught exception: ' + e);
+                      console.log(JSON.stringify(e.json, null, 2));
+                  }
+             // console.log('Responded to', event.subscriber, "in transaction", txid.transactionHash);
             }catch(e){
               throw new Error(`Error responding to query ${event.queryId} : ${e}`)
             }

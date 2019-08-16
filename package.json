@@ -31,7 +31,7 @@
     "@zapjs/eos-node-utils": "1.0.4",
     "big-number": "2.0.0",
     "bignumber.js": "9.0.0",
-    "eosjs-ecc": "^4.0.4",
+    "eosjs-ecc": "4.0.4",
     "eosjs": "20.0.0",
     "hdkey": "1.1.0",
     "wif": "2.0.6",

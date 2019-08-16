@@ -1,24 +1,16 @@
 {
 
 	"title": "Title",
-	"public_key": "Public key",
-	"NODE_URL": "https://api.jungle.alohaeos.com",
-	"mnemonic": "silver traffic ready ocean horror shaft foil miss code ribbon liberty glove",
-	"chain_id": "1",
+	"public_key": "1",
+	"NODE_URL": "http://api.jungle.alohaeos.com",
+	"mnemonic": "slender coach visa grocery mouse pact exercise great try soap base grit",
+	"chain_id": "",
 	"zapcontract": "zapcoretest4",
 	"zaptokencontract": "zaptokentest",
 	"STATUS_URL":"",
 	"EndpointSchema": {
-		"name": "e",
-		"curve": [2,
-			5000000000000000000,
-			2000000000000000000,
-			1000,
-			2,
-			0,
-			3000000000000000000,
-			1000000000000000000
-		],
+		"name": "e98r1",
+		"curve": [3, 0, 0, 2, 10000],
 		"broker": "",
 		"md": "Adding description for your Oracle here",
 		"queryList": [{

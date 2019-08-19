@@ -9,7 +9,7 @@ const IPFS = require("ipfs-mini")
 const ipfs = new IPFS({host:'ipfs.infura.io',port:5001,protocol:'https'})
 const IPFS_GATEWAY = "https://gateway.ipfs.io/ipfs/"
 //import {connectStatus} from "./Status"
-//import io from 'socket.io-client';
+import io from 'socket.io-client';
 import { getPrivateKey, getEncodedName, sleep } from "./utils";
 const ecc = require("eosjs-ecc");
 const BigNumber = require('big-number');
@@ -129,11 +129,12 @@ export  class ZapOracle {
         }
         console.log("Start listening and responding to queries")
 
-        /*  TO-DO for prod: one server for all oracles caching and retranslating events, using our listening API
-            const endp = io.connect('http://some-listening-server.com/events/query');
-            endp.on('start', (resp: any) => console.log(resp.message));
-            endp.on('data', (resp: any) => console.log(resp.data, 'handle as below'));
-        */
+        /*  TO-DO for prod: one server for all oracles caching and retranslating events, using our listening API:
+        const endp = io.connect(`${Config.apiPath}/events/query`);
+        endp.on('start', (resp: any) => console.log(resp.message));
+        endp.on('err', (err: any) => console.log(err, 'handle this on prod'));
+        endp.on('data', (resp: any) => console.log(resp.data, 'handle this on prod'));*/
+
         const listener =  new DemuxEventListener();
         DemuxEventListener.start([Config.NODE_URL, Config.zapcontract, 1000, 'smallListener']);
         listener.on(`${Config.zapcontract}::query`, (err: any, eventArray: any) => {

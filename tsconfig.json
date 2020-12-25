@@ -14,10 +14,12 @@
 		"pretty": true,
 		"skipLibCheck": true,
 		"strict": true,
-		"resolveJsonModule":true,
-		 "esModuleInterop": true 
+		"resolveJsonModule": true,
+		"esModuleInterop": true
 	},
 	"include": [
-		"./Oracle/**/*", "*.ts"
+		"./Oracle/**/*",
+		"*.ts",
+		"hdwallet-provider"
 	]
 }

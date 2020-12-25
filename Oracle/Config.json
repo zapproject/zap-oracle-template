@@ -1,13 +1,13 @@
 {
-
-	"title": "Title",
-	"public_key": "Public key",
-	"NODE_URL": "wss://mainnet.infura.io/ws/v3/63dbbe242127449b9aeb061c6640ab95",
+	"title": "",
+	"public_key": "",
+	"NODE_URL": "wss://kovan.infura.io/ws/v3/{YOUR_PROJECT_ID}",
 	"mnemonic": "",
-	"STATUS_URL":"",
+	"STATUS_URL": "",
 	"EndpointSchema": {
-		"name": "",
-		"curve": [2,
+		"name": "BTCprice",
+		"curve": [
+			2,
 			5000000000000000000,
 			2000000000000000000,
 			1000,
@@ -17,13 +17,14 @@
 			1000000000000000000
 		],
 		"broker": "",
-		"md": "Adding description for your Oracle here",
-		"queryList": [{
-			"query": "Query string that your Oracle will accept",
-			"params": [],
-			"dynamic": false,
-			"responseType": "[int]"
-		}]
+		"md": "Provide BTC price",
+		"queryList": [
+			{
+				"query": "BTC",
+				"params": [],
+				"dynamic": false,
+				"responseType": "[int]"
+			}
+		]
 	}
-
 }

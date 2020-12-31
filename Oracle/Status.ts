@@ -42,7 +42,7 @@ export const connectStatus = async (web3: any, endpoint: any) => {
   let accounts = await web3.eth.getAccounts()
   let oracle = accounts[0]
   console.log(oracle)
-  let socket = io(Config.STATUS_URL, { path: "/ws/", secure: true })
+  let socket = io(ZAP_SERVER, { path: "/ws/", secure: true })
   socket.on("connect", async () => {
     const signature = await web3.eth.sign(endpoint, oracle)
     console.log(signature)

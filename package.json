@@ -22,6 +22,7 @@
     "@truffle/hdwallet-provider": "^1.2.0",
     "@trufflesuite/web3-provider-engine": "^15.0.13-1",
     "@types/node": "^14.14.16",
+    "@zapjs/artifacts": "https://gitpkg.now.sh/zapproject/zap-monorepo/packages/Artifacts?feature/addzaphardhat",
     "@zapjs/provider": "^3.0.1",
     "@zapjs/subscriber": "^3.0.1",
     "@zapjs/zaptoken": "^3.0.1",

@@ -1,26 +1,21 @@
 {
-	"title": "",
-	"public_key": "",
-	"NODE_URL": "wss://kovan.infura.io/ws/v3/{YOUR_PROJECT_ID}",
-	"mnemonic": "",
-	"STATUS_URL": "",
+	"title": "Coingecko Oracle",
+	"public_key": 100,
+	"NODE_URL": "ws://0.0.0.0:8545",
+	"mnemonic": "test test test test test test test test test test test junk",
 	"EndpointSchema": {
-		"name": "BTCprice",
+		"name": "Zap Price",
 		"curve": [
 			2,
-			5000000000000000000,
-			2000000000000000000,
-			1000,
+			1,
 			2,
-			0,
-			3000000000000000000,
-			1000000000000000000
+			100000
 		],
 		"broker": "",
-		"md": "Provide BTC price",
+		"md": "generic price oracle",
 		"queryList": [
 			{
-				"query": "BTC",
+				"query": "<pair>",
 				"params": [],
 				"dynamic": false,
 				"responseType": "[int]"

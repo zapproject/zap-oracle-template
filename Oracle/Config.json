@@ -1,10 +1,10 @@
 {
-	"title": "Coingecko Oracle",
+	"title": "Bittrex Oracle",
 	"public_key": 100,
 	"NODE_URL": "ws://0.0.0.0:8545",
 	"mnemonic": "test test test test test test test test test test test junk",
 	"EndpointSchema": {
-		"name": "Zap Price",
+		"name": "Bittrex Price",
 		"curve": [
 			2,
 			1,
@@ -12,13 +12,13 @@
 			100000
 		],
 		"broker": "",
-		"md": "generic price oracle",
+		"md": "bittrex price oracle",
 		"queryList": [
 			{
 				"query": "<pair>",
 				"params": [],
-				"dynamic": false,
-				"responseType": "strisng"
+				"dynamic": true,
+				"responseType": "[int]"
 			}
 		]
 	}

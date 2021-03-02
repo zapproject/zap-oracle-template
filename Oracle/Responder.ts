@@ -1,29 +1,15 @@
-
-
-var Decimal = require('decimal.js');
-let axios=require('axios')
-let baseURL="https://api.bittrex.com/api/v1.1/public/getticker?market=USD-"
-
-
-
-export async function getResponse(coin: string, params?: string[] ) {
-        try {
-                console.log(`fetching from ${baseURL}${coin.toUpperCase()}`)
-                let data = await axios.get(`${baseURL}${coin.toUpperCase()}`)
-                let price = data.data.result.Last
-                price=price.toString()
-                console.log("data for coin", price[1])
-                if(params){
-                  let s=params[0];
-                  if(s="int"){
-                     let p=new Decimal(price)
-                     price=(p.times('10e+18').floor()).toNumber()
-                  }
-                }
-                return [price]
-        } catch (e) {
-                console.log("fetching failure")
+const binance = require("node-binance-api")()
+const Promise = require("bluebird")
+const URL = "https://api.binance.com/api/v3/avgPrice"
+export async function getResponse(query:string,params?:string[]|[]){
+        let pair = query.toUpperCase()
+        console.log(pair,"pair in get respond")
+        const pr = Promise.promisify(binance.prices)
+        try{
+                const res = await pr(pair)
+                return [res[pair]]
+        }catch(e){
                 return [0] //return 0 to indicate price info is not available
         }
-}
 
+}

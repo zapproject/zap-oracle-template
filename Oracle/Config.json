@@ -1,25 +1,28 @@
 {
-	"title": "Bittrex Oracle",
-	"public_key": 100,
-	"NODE_URL": "ws://0.0.0.0:8545",
-	"mnemonic": "test test test test test test test test test test test junk",
+
+	"title": "Binance Price Oracle",
+	"public_key": "",
+	"NODE_URL": "wss://mainnet.infura.io/ws/v3/63dbbe242127449b9aeb061c6640ab95",
+	"mnemonic": "",
 	"EndpointSchema": {
-		"name": "Bittrex Price",
-		"curve": [
+		"name": "Binance",
+		"curve": [2,
+			5000000000000000000,
+			2000000000000000000,
+			1000,
 			2,
-			1,
-			2,
-			100000
+			0,
+			3000000000000000000,
+			1000000000000000000
 		],
 		"broker": "",
-		"md": "bittrex price oracle",
-		"queryList": [
-			{
-				"query": "<pair>",
-				"params": [],
-				"dynamic": true,
-				"responseType": "[int]"
-			}
-		]
+		"md": "Binance Oracle for spot Prices",
+		"queryList": [{
+			"query": "<pair>",
+			"params": [],
+			"dynamic": false,
+			"responseType": "[int]"
+		}]
 	}
+
 }

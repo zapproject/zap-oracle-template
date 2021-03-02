@@ -1,0 +1,55 @@
+{
+  "_from": "https://gitpkg.now.sh/zapproject/zap-monorepo/packages/Artifacts?feature/addzaphardhat",
+  "_id": "@zapjs/artifacts@3.0.1",
+  "_inBundle": false,
+  "_integrity": "sha512-KF/CaAvY2oFhGTxGggSFdDov5NmVKx1K4p4nMKtNJZHl0pOH+1GHEfXYQv2AkfnHIngPssBVdh02IRoFgnG8+Q==",
+  "_location": "/@zapjs/artifacts",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "remote",
+    "raw": "@zapjs/artifacts@https://gitpkg.now.sh/zapproject/zap-monorepo/packages/Artifacts?feature/addzaphardhat",
+    "name": "@zapjs/artifacts",
+    "escapedName": "@zapjs%2fartifacts",
+    "scope": "@zapjs",
+    "rawSpec": "https://gitpkg.now.sh/zapproject/zap-monorepo/packages/Artifacts?feature/addzaphardhat",
+    "saveSpec": "https://gitpkg.now.sh/zapproject/zap-monorepo/packages/Artifacts?feature/addzaphardhat",
+    "fetchSpec": "https://gitpkg.now.sh/zapproject/zap-monorepo/packages/Artifacts?feature/addzaphardhat"
+  },
+  "_requiredBy": [
+    "/",
+    "/@zapjs/basecontract"
+  ],
+  "_resolved": "https://gitpkg.now.sh/zapproject/zap-monorepo/packages/Artifacts?feature/addzaphardhat",
+  "_shasum": "684e8369255e69f9cd4e070ce9ea4f86c667b160",
+  "_spec": "@zapjs/artifacts@https://gitpkg.now.sh/zapproject/zap-monorepo/packages/Artifacts?feature/addzaphardhat",
+  "_where": "/home/jjj/ZAP/zap-oracle-template",
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/zapproject/Zap-monorepo/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "ZapArtifacts",
+  "devDependencies": {
+    "ts-node": "^7.0.1",
+    "typescript": "^4.1.3"
+  },
+  "engines": {
+    "node": ">=12.20 <=14.15"
+  },
+  "homepage": "https://github.com/zapproject/Zap-monorepo#readme",
+  "keywords": [],
+  "license": "ISC",
+  "main": "lib/index.js",
+  "name": "@zapjs/artifacts",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zapproject/Zap-monorepo.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "run_test": "run-s build"
+  },
+  "version": "3.0.1"
+}

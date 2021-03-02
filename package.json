@@ -27,6 +27,8 @@
     "@zapjs/subscriber": "^3.0.1",
     "@zapjs/zaptoken": "^3.0.1",
     "axios": "^0.21.1",
+    "coingecko-api": "^1.0.10",
+    "decimal.js": "^10.2.1",
     "ipfs-mini": "^1.1.5",
     "node-binance-api": "^0.9.0",
     "path": "^0.12.7",

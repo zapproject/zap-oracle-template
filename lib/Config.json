@@ -1,0 +1,25 @@
+{
+    "title": "Bittrex Oracle",
+    "public_key": 100,
+    "NODE_URL": "ws://0.0.0.0:8545",
+    "mnemonic": "test test test test test test test test test test test junk",
+    "EndpointSchema": {
+        "name": "Bittrex Price",
+        "curve": [
+            2,
+            1,
+            2,
+            100000
+        ],
+        "broker": "",
+        "md": "bittrex price oracle",
+        "queryList": [
+            {
+                "query": "<pair>",
+                "params": [],
+                "dynamic": true,
+                "responseType": "[int]"
+            }
+        ]
+    }
+}

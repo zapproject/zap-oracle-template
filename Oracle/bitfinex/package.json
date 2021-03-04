@@ -1,0 +1,27 @@
+{
+  "name": "api-test",
+  "version": "1.0.0",
+  "description": "Testing the bitfinex API",
+  "main": "index.js",
+  "scripts": {
+    "status": "node scripts/status.js",
+    "tickers": "node scripts/tickers.js",
+    "ticker": "node scripts/ticker.js",
+    "tickerWithAxios": "node scripts/tickerWithAxios.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quigela/api-test.git"
+  },
+  "author": "quigela",
+  "license": "GPL",
+  "bugs": {
+    "url": "https://github.com/quigela/api-test/issues"
+  },
+  "homepage": "https://github.com/quigela/api-test#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "node-fetch": "^2.6.1",
+    "xmlhttprequest": "^1.8.0"
+  }
+}

@@ -1,0 +1,25 @@
+{
+    "title": "Coingecko Oracle",
+    "public_key": 100,
+    "NODE_URL": "ws://0.0.0.0:8545",
+    "mnemonic": "test test test test test test test test test test test junk",
+    "EndpointSchema": {
+        "name": "Zap Price",
+        "curve": [
+            2,
+            1,
+            2,
+            100000
+        ],
+        "broker": "",
+        "md": "generic price oracle",
+        "queryList": [
+            {
+                "query": "<pair>",
+                "params": [],
+                "dynamic": false,
+                "responseType": "strisng"
+            }
+        ]
+    }
+}

@@ -9,17 +9,29 @@ const assert = require("assert")
 const IPFS = require("ipfs-mini")
 const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
 const IPFS_GATEWAY = "https://gateway.ipfs.io/ipfs/"
+let AWSWebsocketProvider=require('./aws-websocket-provider')
 // import { connectStatus } from "./Status"
+require('dotenv').config()
 
 export class ZapOracle {
     web3: any
     oracle: any
     zapToken: any
     constructor() {
-        const wsProvider = new Web3.providers.WebsocketProvider(Config.NODE_URL)
-        HDWalletProvider.prototype.on = wsProvider.on.bind(wsProvider)
-        const provider = new HDWalletProvider(Config.mnemonic, wsProvider)
-        this.web3 = new Web3(provider)
+        let providerType=process.env.PROVIDER
+        let node_url=process.env.NODE_URL
+        let wsProvider;
+        let provider;
+        if(providerType==="AWS"){
+            this.web3= new Web3(new AWSWebsocketProvider(node_url));
+        }else{
+            wsProvider = new Web3.providers.WebsocketProvider(Config.NODE_URL)
+            HDWalletProvider.prototype.on = wsProvider.on.bind(wsProvider)
+            provider = new HDWalletProvider(Config.mnemonic, wsProvider)
+            this.web3 = new Web3(provider)
+        }
+        
+        
         this.oracle = null
         this.zapToken = null
     }
@@ -142,6 +154,7 @@ export class ZapOracle {
         // loads the first account for this web3 provider
         const accounts: string[] = await this.web3.eth.getAccounts();
         if (accounts.length == 0) throw ('Unable to find an account in the current web3 provider, check your Config variables');
+        console.log(accounts)
         const owner: string = accounts[0];
         this.oracle = new ZapProvider(owner, {
             networkId: (await this.web3.eth.net.getId()).toString(),

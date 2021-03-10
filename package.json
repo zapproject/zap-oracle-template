@@ -19,7 +19,7 @@
   "author": "Michael Man, propulsor",
   "license": "ISC",
   "dependencies": {
-    "@truffle/hdwallet-provider": "^1.2.0",
+    "@truffle/hdwallet-provider": "^1.2.2",
     "@trufflesuite/web3-provider-engine": "^15.0.13-1",
     "@types/node": "^14.14.16",
     "@zapjs/artifacts": "https://gitpkg.now.sh/zapproject/zap-monorepo/packages/Artifacts?feature/addzaphardhat",

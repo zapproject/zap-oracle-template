@@ -19,7 +19,7 @@
   "author": "Michael Man, propulsor",
   "license": "ISC",
   "dependencies": {
-    "@truffle/hdwallet-provider": "^1.2.0",
+    "@truffle/hdwallet-provider": "^1.2.2",
     "@trufflesuite/web3-provider-engine": "^15.0.13-1",
     "@types/node": "^14.14.16",
     "@zapjs/artifacts": "https://gitpkg.now.sh/zapproject/zap-monorepo/packages/Artifacts?feature/addzaphardhat",
@@ -36,6 +36,8 @@
     "socket.io-client": "^3.0.4",
     "url": "^0.11.0",
     "web3": "^1.3.1",
+    "web3-core-helpers": "^1.3.4",
+    "web3-provider-engine": "^16.0.1",
     "web3-utils": "^1.3.1",
     "websocket": "^1.0.33"
   },

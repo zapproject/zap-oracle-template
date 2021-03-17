@@ -16,7 +16,13 @@ export class ZapOracle {
     oracle: any
     zapToken: any
     constructor() {
-        const wsProvider = new Web3.providers.WebsocketProvider(Config.NODE_URL)
+        let wsProvider;
+        if(process.env.NODE_URL){
+            wsProvider = new Web3.providers.WebsocketProvider(process.env.NODE_URL)
+        }else{
+            wsProvider = new Web3.providers.WebsocketProvider(Config.NODE_URL)
+        }
+        
         HDWalletProvider.prototype.on = wsProvider.on.bind(wsProvider)
         const provider = new HDWalletProvider(Config.mnemonic, wsProvider)
         this.web3 = new Web3(provider)

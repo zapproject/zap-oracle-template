@@ -18,8 +18,10 @@ export class ZapOracle {
     constructor() {
         let wsProvider;
         if(process.env.NODE_URL){
+            console.log(process.env.NODE_URL)
             wsProvider = new Web3.providers.WebsocketProvider(process.env.NODE_URL)
         }else{
+            console.log(Config.NODE_URL)
             wsProvider = new Web3.providers.WebsocketProvider(Config.NODE_URL)
         }
         
